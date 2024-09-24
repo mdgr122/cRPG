@@ -3,11 +3,16 @@
 
 #include "cRPG.h"
 #include "Game.h"
+#include "Logger.h"
 
 using namespace std;
 
 int main()
 {
+
+	Logger logger;
+	logger.Log("Testing");
+	
 	// Creating the Game object called game.
 	Game game;
 

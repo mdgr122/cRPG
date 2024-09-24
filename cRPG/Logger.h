@@ -11,7 +11,7 @@ public:
 	~Logger() = default; // Default destructor
 
 	static void Log(const std::string_view message);
-	static void Error(const std::string_view, std::source_location = std::source_location::current());
+	static void Error(const std::string_view message, std::source_location location = std::source_location::current());
 
 private:
 	static std::string CurrentDate();
