@@ -11,7 +11,7 @@ int main()
 {
 
 	Logger logger;
-	logger.Log("Testing");
+	//logger.Log("Testing");
 	
 	// Creating the Game object called game.
 	Game game;

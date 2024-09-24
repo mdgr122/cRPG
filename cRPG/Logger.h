@@ -4,6 +4,9 @@
 #include <string_view>
 #include <source_location>
 
+#define CRPG_LOG(x) Logger::Log(x);
+#define CRPG_ERROR(x) Logger::Error(x);
+
 class Logger
 {
 public:
