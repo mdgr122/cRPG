@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include "Console.h"
 #include "Logger.h"
 #include "Colors.h"
@@ -7,43 +8,56 @@ Console::Console() : pScreen_{nullptr}
 {
 
 	auto hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD maxSize = GetLargestConsoleWindowSize(hConsole);
 	bool bAdjustBuffer{ false };
 	int minX{ GetSystemMetrics(SM_CXMIN) };
 	int minY{ GetSystemMetrics(SM_CYMIN) };
+	CONSOLE_SCREEN_BUFFER_INFOEX csbiex;
+	csbiex.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+
+	SHORT left{ 0 };
+	SHORT right{ 0 };
+
+
+
+	if (!GetConsoleScreenBufferInfoEx(hConsole, &csbiex))
+	{
+		DWORD error = GetLastError();
+		CRPG_ERROR("Error: " + error);
+		throw("Failed to GetConsoleScreenBufferInfoEx");
+	}
+
+	SHORT bufferWidth = csbiex.dwSize.X;
+	SHORT bufferHeight = csbiex.dwSize.Y;
+	
+	//SHORT SCREEN_WIDTH = csbiex.dwSize.X;
+	//SHORT SCREEN_HEIGHT = csbiex.dwSize.Y;
+
+	BUFFER_SIZE = bufferWidth * bufferHeight;
 
 	if (minX > SCREEN_WIDTH)
 	{
 		SCREEN_WIDTH = static_cast<SHORT>(minX);
 		bAdjustBuffer = true;
 	}
+
 	if (minY > SCREEN_HEIGHT)
 	{
 		SCREEN_HEIGHT = static_cast<SHORT>(minY);
 		bAdjustBuffer = true;
 	}
 
-	// Ensure SCREEN_WIDTH and SCREEN_HEIGHT do not exceed the maximum allowed console size
-	if (SCREEN_WIDTH > maxSize.X) {
-		SCREEN_WIDTH = maxSize.X;
-		bAdjustBuffer = true;
-	}
-	if (SCREEN_HEIGHT > maxSize.Y) {
-		SCREEN_HEIGHT = maxSize.Y;
-		bAdjustBuffer = true;
-	}
-
 	if (bAdjustBuffer)
 		BUFFER_SIZE = SCREEN_WIDTH * SCREEN_HEIGHT;
 
-	COORD consoleBuffer{ .X = SCREEN_WIDTH, .Y = SCREEN_HEIGHT };
-
+	//COORD consoleBuffer{ .X = SCREEN_WIDTH, .Y = SCREEN_HEIGHT };
+	COORD consoleBuffer{ .X = bufferWidth, .Y = bufferHeight };
 	if (!SetConsoleScreenBufferSize(hConsole, consoleBuffer))
 	{
 		auto error = GetLastError();
 		CRPG_ERROR("Error: " + std::to_string(error));
 		throw("Failed to set the console screen buffer size when creating the console!");
 	}
+
 
 	SMALL_RECT windowRect{ .Left = 0, .Top = 0, .Right = SCREEN_WIDTH - 1, .Bottom = SCREEN_HEIGHT - 1 };
 
@@ -128,7 +142,7 @@ void Console::ClearBuffer()
 		pScreen_[i] = L' ';
 
 	// Reset buffer to white
-	SetTextColor(BUFFER_SIZE, 0, 0, hConsole_, WHITE);
+	//SetTextColor(BUFFER_SIZE, 0, 0, hConsole_, WHITE);
 }
 
 
