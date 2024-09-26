@@ -2,7 +2,7 @@
 #define GAME_H
 #include "Console.h"
 #include "Keyboard.h"
-#include "Button.h"
+#include "states/StateMachine.h"
 
 class Game
 {
@@ -18,6 +18,7 @@ private:
 
 	std::unique_ptr<Console> pConsole_;
 	std::unique_ptr<Keyboard> pKeyboard_;
+	std::unique_ptr<StateMachine> pStateMachine_;
 
 	DWORD NumRead_;
 	INPUT_RECORD InRecBuff_[128];

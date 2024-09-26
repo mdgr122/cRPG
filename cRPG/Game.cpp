@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "Logger.h"
-#include "Keys.h"
 #include <iostream>
+#include "states/GameState.h"
 
 bool Game::Init()
 {
@@ -24,6 +24,9 @@ bool Game::Init()
 	// The returned std::unique_ptr<Keyboard> is assigned to pKeyboard_, which now exclusively owns the Keyboard object. 
 	// When pKeyboard_ goes out of scope, the object is automatically deleted.
 	pKeyboard_ = std::make_unique<Keyboard>();
+	pStateMachine_ = std::make_unique<StateMachine>();
+
+	pStateMachine_->PushState(std::make_unique<GameState>(*pKeyboard_, *pStateMachine_));
 
 	return true;
 }
@@ -72,15 +75,40 @@ void Game::ProcessInputs()
 	{
 		is_running_ = false;
 	}
+	if (pStateMachine_->Empty())
+	{
+		CRPG_ERROR("No States exist in the StateMachine to Process Inputs");
+		is_running_ = false;
+		return;
+	}
+	pStateMachine_->GetCurrentState()->ProcessInputs();
+
 }
 
 void Game::Update()
 {
+
+	if (pStateMachine_->Empty())
+	{
+		CRPG_ERROR("No States exist in the StateMachine to Update");
+		is_running_ = false;
+		return;
+	}
+
+	pStateMachine_->GetCurrentState()->Update();
 	pKeyboard_->Update();
 }
 
 void Game::Draw()
 {
+	if (pStateMachine_->Empty())
+	{
+		CRPG_ERROR("No States exist in the StateMachine to Draw");
+		is_running_ = false;
+		return;
+	}
+
+	pStateMachine_->GetCurrentState()->Draw();
 	pConsole_->Write(10, 10, L"Hello World!", RED);
 	pConsole_->Draw();
 }
@@ -99,7 +127,7 @@ void Game::KeyEventProcess(KEY_EVENT_RECORD key_event)
 }
 
 
-Game::Game() : is_running_{true}, pConsole_{nullptr}, pKeyboard_{nullptr}
+Game::Game() : is_running_{true}, pConsole_{nullptr}, pKeyboard_{nullptr}, pStateMachine_{nullptr}
 {
 
 }

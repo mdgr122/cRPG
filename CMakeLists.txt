@@ -12,7 +12,7 @@ endif()
 project ("cRPG")
 
 # Add source to this project's executable.
-add_executable(cRPG "cRPG/cRPG.cpp" "cRPG/cRPG.h" "cRPG/Game.cpp" "cRPG/Game.h" "cRPG/Logger.cpp" "cRPG/Logger.h" "cRPG/Colors.h" "cRPG/Console.cpp" "cRPG/Console.h" "cRPG/Button.h" "cRPG/Keys.h" "cRPG/Keyboard.cpp" "cRPG/Keyboard.h" "cRPG/Button.cpp" "cRPG/Button.h" )
+add_executable(cRPG "cRPG/cRPG.cpp" "cRPG/cRPG.h" "cRPG/Game.cpp" "cRPG/Game.h" "cRPG/Logger.cpp" "cRPG/Logger.h" "cRPG/Colors.h" "cRPG/Console.cpp" "cRPG/Console.h" "cRPG/Button.h" "cRPG/Keys.h" "cRPG/Keyboard.cpp" "cRPG/Keyboard.h" "cRPG/Button.cpp" "cRPG/Button.h"  "cRPG/states/InterfaceState.h" "cRPG/states/StateMachine.h" "cRPG/states/StateMachine.cpp" "cRPG/states/GameState.h" "cRPG/states/GameState.cpp" "cRPG/Selector.h")
 
 set_property(TARGET cRPG PROPERTY CXX_STANDARD 20)
 
