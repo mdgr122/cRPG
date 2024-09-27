@@ -19,6 +19,18 @@ public:
 	void Draw();
 	bool ShowConsoleCursor(bool show);
 
+	void DrawPanelHorz(int x, int y, size_t length, WORD color = WHITE, const std::wstring& character = L"=");
+	void DrawPanelVert(int x, int y, size_t height, WORD color = WHITE, const std::wstring& character = L"|");
+	void DrawPanel(
+		int x, int y, size_t width, size_t height, WORD color = WHITE,
+		const std::wstring& width_char = L"=",
+		const std::wstring& height_char = L"|"
+		//const std::wstring& width_char = L"+",
+		//const std::wstring& height_char = L"+"
+	);
+
+
+
 
 private:
 
@@ -38,4 +50,5 @@ private:
 	std::unique_ptr<wchar_t[]> pScreen_;
 
 	bool SetTextColor(int size, int x, int y, HANDLE handle, WORD color);
+	void DrawBorder();
 };

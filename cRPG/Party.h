@@ -16,7 +16,7 @@ public:
 	bool RemoveMember(const std::wstring& memberID, bool eliminate = false);
 	Inventory& GetInventory() { return m_Inventory; }
 	std::vector<std::shared_ptr<Player>>& GetParty() { return m_PartyMembers; }
-	const int GetGold() const { m_Gold; }
+	const int GetGold() const { return m_Gold; }
 	void AddGold(int gold);
 
 	const int getNumActiveMembers() const { return m_NumActiveMembers; }

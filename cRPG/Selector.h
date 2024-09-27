@@ -67,6 +67,9 @@ public:
 	~Selector();
 
 	void SetData(std::vector<T> data) { m_Data = data; }
+
+
+
 	const std::vector<T>& GetData() { return m_Data; }
 	void SetSelectionFunc(std::function<void(int, std::vector<T>)> on_selection) { m_OnSelection = on_selection; }
 	void SetDrawFunc(std::function<void(int, int, T)> on_draw_item) { m_OnDrawItem = on_draw_item; }
@@ -204,7 +207,7 @@ template<typename T>
 inline void Selector<T>::DrawItem(int x, int y, T item)
 {
 	// Check to see if the type is wstring
-	if constexpr (std::is_same< T, std::wstring>::value)
+	if constexpr (std::is_same<T, std::wstring>::value)
 	{
 		m_Console.Write(x, y, item); // We know it's a wstring, so we allow it to draw
 		return;
@@ -252,12 +255,24 @@ inline void Selector<T>::Draw()
 				if (m_bShowCursor)
 				{
 					// Reset areas behind cursor as it moves -- I.e., as the cursor moves, clear the last position from the console
-					if (i != 0)
+					//if (i != 0)
+					//	m_Console.Write(x - (x == 0 ? 0 : 2), y - rowHeight, L" ");
+
+					//m_Console.Write(x - (x == 0 ? 0 : 2), y + rowHeight, L" ");
+					//m_Console.Write(x - (x == 0 ? 0 : 2) - spacingX, y, L" ");
+					//m_Console.Write(x - (x == 0 ? 0 : 2) + spacingX, y, L" ");
+
+					if (m_Params.currentY != 0)
 						m_Console.Write(x - (x == 0 ? 0 : 2), y - rowHeight, L" ");
 
-					m_Console.Write(x - (x == 0 ? 0 : 2), y + rowHeight, L" ");
-					m_Console.Write(x - (x == 0 ? 0 : 2) - spacingX, y, L" ");
-					m_Console.Write(x - (x == 0 ? 0 : 2) + spacingX, y, L" ");
+					if (m_Params.currentX != 0)
+						m_Console.Write(x - (x == 0 ? 0 : 2) - spacingX, y, L" ");
+
+					if (m_Params.currentY != m_Rows - 1)
+						m_Console.Write(x - (x == 0 ? 0 : 2), y + rowHeight, L" ");
+
+					if (m_Params.currentX != m_Params.columns - 1)
+						m_Console.Write(x - (x == 0 ? 0 : 2) + spacingX, y, L" ");
 
 					// Draw the cusor
 					m_Console.Write(x - (x == 0 ? 0 : 2), y, m_Params.cursor, RED);

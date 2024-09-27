@@ -15,9 +15,6 @@ Console::Console() : pScreen_{nullptr}
 	CONSOLE_SCREEN_BUFFER_INFOEX csbiex;
 	csbiex.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
 
-	SHORT left{ 0 };
-	SHORT right{ 0 };
-
 
 
 	if (!GetConsoleScreenBufferInfoEx(hConsole, &csbiex))
@@ -34,6 +31,7 @@ Console::Console() : pScreen_{nullptr}
 	//SHORT SCREEN_HEIGHT = csbiex.dwSize.Y;
 
 	BUFFER_SIZE = bufferWidth * bufferHeight;
+	//BUFFER_SIZE = SCREEN_WIDTH * SCREEN_HEIGHT;
 
 	if (minX > SCREEN_WIDTH)
 	{
@@ -186,6 +184,7 @@ void Console::Write(int x, int y, const std::wstring& text, WORD color)
 
 void Console::Draw()
 {
+	DrawBorder();
 	// Handle all console drawings
 	WriteConsoleOutputCharacterW(hConsole_, pScreen_.get(), BUFFER_SIZE, { 0, 0 }, &BytesWritten_);
 }
@@ -200,6 +199,44 @@ bool Console::ShowConsoleCursor(bool show)
 	}
 	cursor_info.bVisible = show;
 	return SetConsoleCursorInfo(hConsole_, &cursor_info);
+}
+
+void Console::DrawPanelHorz(int x, int y, size_t length, WORD color, const std::wstring& character)
+{
+	std::wstring sPanelHorz = L"";
+
+	for (int i = 0; i < length; i++)
+		sPanelHorz += character;
+
+	Write(x, y, sPanelHorz, color);
+}
+
+void Console::DrawPanelVert(int x, int y, size_t height, WORD color, const std::wstring& character)
+{
+
+	for (int i = 0; i < height; i++)
+		Write(x, y + i, character, color);
+}
+
+//void Console::DrawPanel(int x, int y, size_t width, size_t height, WORD color, const std::wstring& height_char, const std::wstring& width_char)
+//{
+//	DrawPanelHorz(x, y, width, color, width_char);
+//	DrawPanelHorz(x, height, width, color, width_char);
+//
+//	DrawPanelVert(x, y + 1, height - 1, color, height_char);
+//	DrawPanelVert(x + width - 1, y + 1, height - 1, color, height_char);
+//
+//}
+
+
+void Console::DrawPanel(int x, int y, size_t width, size_t height, WORD color, const std::wstring& width_char,
+	const std::wstring& height_char)
+{
+	DrawPanelHorz(x, y, width, color, width_char);
+	DrawPanelHorz(x, y + height, width, color, width_char);
+
+	DrawPanelVert(x, y + 1, height - 1, color, height_char);
+	DrawPanelVert(x + width - 1, y + 1, height - 1, color, height_char);
 }
 
 bool Console::SetTextColor(int size, int x, int y, HANDLE handle, WORD color)
@@ -219,4 +256,9 @@ bool Console::SetTextColor(int size, int x, int y, HANDLE handle, WORD color)
 	}
 
 	return true;
+}
+
+void Console::DrawBorder()
+{
+	DrawPanel(1, 0, SCREEN_WIDTH - 2, SCREEN_HEIGHT - 1);
 }

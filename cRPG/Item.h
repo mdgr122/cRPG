@@ -11,7 +11,7 @@ public:
 	virtual ~Item() {}
 	virtual bool OnUse(Player& player) = 0;
 
-	const int Getcount() const { return m_Count; }
+	const int GetCount() const { return m_Count; }
 
 	void Decrement()
 	{
@@ -21,9 +21,12 @@ public:
 			m_Count = 0;
 	}
 
-	void AddItem(int num)
-	{
+	bool AddItem(int num) 
+	{ 
+		if (m_Count + num > MAX_COUNT)
+			return false;
 		m_Count += num;
+		return true;
 	}
 
 	const std::wstring& GetItemName() const { return m_sItemName; }
@@ -31,7 +34,7 @@ public:
 
 
 protected:
-	int m_Count{ 1 };
+	int m_Count{ 1 }, m_BuyPrice{ 0 }, m_SellPrice{ 0 }, m_ItemValue{ 0 };
 	std::wstring m_sItemName{ L"Item_Name: " };
 	std::wstring m_sItemDescription{ L"Item description here " };
 
@@ -39,5 +42,6 @@ protected:
 
 
 private:
+	const int MAX_COUNT = 99;
 	ItemType m_eItemType;
 };
