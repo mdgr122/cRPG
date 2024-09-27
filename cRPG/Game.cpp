@@ -26,7 +26,7 @@ bool Game::Init()
 	pKeyboard_ = std::make_unique<Keyboard>();
 	pStateMachine_ = std::make_unique<StateMachine>();
 
-	pStateMachine_->PushState(std::make_unique<GameState>(*pKeyboard_, *pStateMachine_));
+	pStateMachine_->PushState(std::make_unique<GameState>(*pConsole_, *pKeyboard_, *pStateMachine_));
 
 	return true;
 }
@@ -109,7 +109,7 @@ void Game::Draw()
 	}
 
 	pStateMachine_->GetCurrentState()->Draw();
-	pConsole_->Write(10, 10, L"Hello World!", RED);
+	//pConsole_->Write(10, 10, L"Hello World!", RED);
 	pConsole_->Draw();
 }
 

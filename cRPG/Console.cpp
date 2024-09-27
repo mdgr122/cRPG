@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "Colors.h"
 #include <vector>
+#include <cassert>
 
 Console::Console() : pScreen_{nullptr}
 {
@@ -140,21 +141,47 @@ void Console::ClearBuffer()
 	// Set all the values of the buffer to an empty space in memory
 	for (int i = 0; i < BUFFER_SIZE; i++)
 		pScreen_[i] = L' ';
-
-	// Reset buffer to white
-	//SetTextColor(BUFFER_SIZE, 0, 0, hConsole_, WHITE);
 }
 
 
 void Console::Write(int x, int y, const std::wstring& text, WORD color)
 {
 
-	SetTextColor(text.size(), x, y, hConsole_, color);
+	std::vector<wchar_t> invalidCharacters{ L' ', L'\n', L'\t', L'\r' };
 
+
+	// if text.size() > 1 or if it's empty, then return bool false; If not, then return character at text[0]
+	auto is_any_of = [&](wchar_t character)
+		{
+			if (text.size() > 1 || text.empty())
+				return false;
+
+			return character == text[0];
+		};
+
+	// Takes in a vector and checks the range to see if any 
+	if (std::find_if(invalidCharacters.begin(), invalidCharacters.end(), is_any_of) == std::end(invalidCharacters))
+		SetTextColor(text.size(), x, y, hConsole_, color);
+
+	// Get the position in the buffer based on the index
 	int pos = y * SCREEN_WIDTH + x;
-	//swprintf(&pScreen_[pos], BUFFER_SIZE, text.c_str());
-	if (pos < BUFFER_SIZE)
-		swprintf(&pScreen_[pos], BUFFER_SIZE - pos, text.c_str());  // Ensure not to overwrite beyond BUFFER_SIZE
+
+	// Check to see if the position goes beyond the BUFFER_SIZE - When an assert statement is encountered, the condition inside it is evaluated: if true, program executes as normal
+	// If false, the assert macro prints an error message and terminates the program, indicating a failure in meeting an expected condition.
+	// Important to note that assert's are only called during debugging, and are ignored in release
+	assert(pos + text.size() < BUFFER_SIZE);
+
+	// We do not want to write to a position that is beyond the BUFFER_SIZEb
+	if (pos + text.size() >= BUFFER_SIZE)
+	{
+		CRPG_ERROR("Trying to write to a position beyond the BUFFER_SIZE")
+			return;
+	}
+
+	swprintf(&pScreen_[pos], BUFFER_SIZE, text.c_str());
+
+	//if (pos < BUFFER_SIZE)
+	//	swprintf(&pScreen_[pos], BUFFER_SIZE - pos, text.c_str());  // Ensure not to overwrite beyond BUFFER_SIZE
 }
 
 void Console::Draw()

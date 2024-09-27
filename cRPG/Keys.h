@@ -79,3 +79,9 @@ constexpr int KEY_LCONTROL = 0xA2;
 constexpr int KEY_RCONTROL = 0xA3;
 
 constexpr int KEY_LAST = 0xFF;
+
+// Arrow Keys
+constexpr int KEY_UP = 0x26;
+constexpr int KEY_DOWN = 0x28;
+constexpr int KEY_LEFT = 0x25;
+constexpr int KEY_RIGHT = 0x27;
