@@ -6,6 +6,8 @@
 #include "../Potion.h"
 #include "../utilities/ItemCreator.h"
 #include "GameMenuState.h"
+#include "../utilities/ItemLoader.h"
+#include <cassert>
 
 
 
@@ -59,6 +61,9 @@ GameState::~GameState()
 void GameState::OnEnter()
 {
 	m_Console.ClearBuffer();
+	ItemLoader il{ "C:/Users/MDaki/source/repos/cRPG/cRPG/Assets/xml_files/ItemDefs.xml" };
+	auto item = il.CreateObjectFromFile("Strong Potion");
+	//assert(item);
 }
 
 void GameState::OnExit()

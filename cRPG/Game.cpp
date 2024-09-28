@@ -2,6 +2,7 @@
 #include "Logger.h"
 #include <iostream>
 #include "states/GameState.h"
+#include "utilities/Globals.h"
 
 bool Game::Init()
 {
@@ -97,6 +98,10 @@ void Game::Update()
 
 	pStateMachine_->GetCurrentState()->Update();
 	pKeyboard_->Update();
+
+
+	// Updates the gametime and calls the instance irght away. Recall the instance is a singleton, so only one instance.
+	CRPG_Globals::GetInstance().Update();
 }
 
 void Game::Draw()

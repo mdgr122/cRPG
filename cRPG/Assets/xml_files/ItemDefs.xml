@@ -1,0 +1,25 @@
+﻿<ItemDefs> <!--- Root Element-->
+	<Items>
+		<Item>
+			<Name>Potion</Name>
+			<Description>Heals a small amount of health</Description>
+			<Type>Health</Type>
+			<Value>25</Value>
+			<BuyPrice>50</BuyPrice>
+		</Item>
+		<Item>
+			<Name>Strong Potion</Name>
+			<Description>Heals a large amount of health</Description>
+			<Type>Health</Type>
+			<Value>250</Value>
+			<BuyPrice>300</BuyPrice>
+		</Item>
+		<Item>
+			<Name>Very Strong Potion</Name>
+			<Description>Heals all party members to full</Description>
+			<Type>Health</Type>
+			<Value>-1</Value>
+			<BuyPrice>5000</BuyPrice>
+		</Item>
+	</Items>
+</ItemDefs>

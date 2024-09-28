@@ -5,7 +5,7 @@
 #include "../Keyboard.h"
 #include "../States/StateMachine.h"
 #include "../Selector.h"
-
+#include "../utilities/Globals.h"
 
 using namespace std::placeholders;
 
@@ -125,6 +125,10 @@ void GameMenuState::DrawPanels()
 	m_Console.DrawPanelVert(m_PanelBarX - 1, 2, 44, BLUE); // LEFT
 	m_Console.DrawPanelVert(m_PanelBarX + PANEL_BARS, 2, 44, BLUE); // RIGHT
 	m_Console.DrawPanelVert(48, 8, 38, BLUE); // MIDDLE
+
+	// Draw the game time
+	const auto& time_str = L"TIME: " + CRPG_Globals::GetInstance().GetTime();
+	m_Console.Write(26, 44, time_str);
 }
 
 void GameMenuState::DrawPlayerInfo()

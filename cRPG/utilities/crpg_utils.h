@@ -1,5 +1,8 @@
 #pragma once
 #include<vector>
+#include <string>
+#include <Windows.h>
+#include "../Item.h"
 
 // Template function to remove an element from a vector at a specific index.
 // 'T' represents the type of elements stored in the vector.
@@ -20,3 +23,9 @@ void remove(std::vector<T>& vec, size_t index)
     // After erasing, all elements after the removed one shift to the left,
     // and the vector size decreases by one.
 }
+
+std::wstring CharToWide(const char* src);
+std::string WideToStr(const std::wstring& wstr);
+std::wstring PadNumbers(int num);
+
+Item::ItemType ItemTypeFromString(const std::string& item_type);
