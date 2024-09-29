@@ -43,6 +43,8 @@ add_executable(cRPG
     "cRPG/states/StateMachine.cpp" 
     "cRPG/states/GameState.h" 
     "cRPG/states/GameState.cpp" 
+    "cRPG/states/ItemMenuState.h" 
+    "cRPG/states/ItemMenuState.cpp" 
     "cRPG/Selector.h" 
     "cRPG/Actor.cpp" 
     "cRPG/Actor.h" 

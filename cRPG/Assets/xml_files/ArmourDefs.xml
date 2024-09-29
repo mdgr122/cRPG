@@ -5,8 +5,9 @@
 			<Description>Simple shirt made of quality leather</Description>
 			<Type>Armour</Type>
 			<BuyPrice>300</BuyPrice>
+			<SellPrice>450</SellPrice>
 			<ArmourProperties>
-				<DefensePwr>20</DefensePwr>
+				<DefensePower>20</DefensePower>
 				<ArmourType>Chest</ArmourType>
 		</ArmourProperties>
 			<StatModifier>
@@ -20,8 +21,9 @@
 			<Description>A snug leather cap that provides little defense</Description>
 			<Type>Armour</Type>
 			<BuyPrice>125</BuyPrice>
+			<SellPrice>200</SellPrice>
 			<ArmourProperties>
-				<DefensePwr>7</DefensePwr>
+				<DefensePower>7</DefensePower>
 				<ArmourType>Headgear</ArmourType>
 			</ArmourProperties>
 		</Armour>

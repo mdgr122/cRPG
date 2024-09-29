@@ -6,6 +6,7 @@
 			<Description>Durable sword made of iron</Description>
 			<Type>Weapon</Type>
 			<BuyPrice>300</BuyPrice>
+			<SellPrice>250</SellPrice>
 			<WeaponProperties>
 				<AttackPower>20</AttackPower>
 				<WeaponType>Sword</WeaponType>
@@ -21,6 +22,7 @@
 			<Description>Heavy sword</Description>
 			<Type>Weapon</Type>
 			<BuyPrice>500</BuyPrice>
+			<SellPrice>450</SellPrice>
 			<WeaponProperties>
 				<AttackPower>25</AttackPower>
 				<WeaponType>Sword</WeaponType>

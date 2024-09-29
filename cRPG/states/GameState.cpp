@@ -7,6 +7,7 @@
 #include "../utilities/ItemCreator.h"
 #include "GameMenuState.h"
 #include "../utilities/ItemLoader.h"
+#include "../utilities/EquipmentLoader.h"
 #include <cassert>
 
 
@@ -25,6 +26,7 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 
 	// Create an item to add to inventory test
 	auto potion = ItemCreator::CreateItem(Item::ItemType::HEALTH, L"Potion", L"Heals for a small amount", 25, 50);
+	auto strong_potion = ItemCreator::CreateItem(Item::ItemType::HEALTH, L"Strong Potion", L"Heals a large amount of health", 250, 300);
 	auto sword = ItemCreator::CreateEquipment(Equipment::EquipType::WEAPON, 
 		WeaponProperties(15, WeaponProperties::WeaponType::SWORD),
 		ArmourProperties(),
@@ -43,14 +45,15 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 
 
 	m_Party->GetInventory().AddItem(std::move(potion));
+	m_Party->GetInventory().AddItem(std::move(strong_potion));
 	m_Party->GetInventory().AddEquipment(std::move(sword));
 	m_Party->GetInventory().AddEquipment(std::move(helmet));
 
 	
-	auto player = std::make_shared<Player>(L"Player1", L"1", m_Party->GetInventory(), 1, 100);
-	auto player2 = std::make_shared<Player>(L"Player2", L"2", m_Party->GetInventory(), 1, 100);
+	auto player = std::make_shared<Player>(L"Test PLayer", L"1", m_Party->GetInventory(), 1, 100);
+	//auto player2 = std::make_shared<Player>(L"Player2", L"2", m_Party->GetInventory(), 1, 100);
 	m_Party->AddMember(std::move(player));
-	m_Party->AddMember(std::move(player2));
+	//m_Party->AddMember(std::move(player2));
 
 }
 
@@ -63,7 +66,10 @@ void GameState::OnEnter()
 	m_Console.ClearBuffer();
 	ItemLoader il{ "C:/Users/MDaki/source/repos/cRPG/cRPG/Assets/xml_files/ItemDefs.xml" };
 	auto item = il.CreateObjectFromFile("Strong Potion");
-	//assert(item);
+
+	EquipmentLoader el{ "C:/Users/MDaki/source/repos/cRPG/cRPG/Assets/xml_files/WeaponDefs.xml" };
+	auto equipment = el.CreateObjectFromFile("Iron Sword");
+	assert(equipment);
 }
 
 void GameState::OnExit()
