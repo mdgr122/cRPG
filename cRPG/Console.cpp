@@ -16,7 +16,17 @@ Console::Console() : pScreen_{nullptr}
 	csbiex.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
 
 
+	/*
+	
+	BOOL WINAPI GetConsoleScreenBufferInfoEx(
+	  _In_  HANDLE                        hConsoleOutput,
+	  _Out_ PCONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx
+	);
+	
+	*/
 
+	// screen buffer is the portion of memory used by the console to stoer the output BEFORE it's displayed on the screen.
+	// It's an 'off-screen area' where text/graphical info is written before being passed through to the screen.
 	if (!GetConsoleScreenBufferInfoEx(hConsole, &csbiex))
 	{
 		DWORD error = GetLastError();
@@ -50,6 +60,16 @@ Console::Console() : pScreen_{nullptr}
 
 	//COORD consoleBuffer{ .X = SCREEN_WIDTH, .Y = SCREEN_HEIGHT };
 	COORD consoleBuffer{ .X = bufferWidth, .Y = bufferHeight };
+
+	/*
+	
+	BOOL WINAPI SetConsoleScreenBufferSize(
+		_In_ HANDLE hConsoleOutput,
+		_In_ COORD  dwSize
+	);
+
+	*/
+
 	if (!SetConsoleScreenBufferSize(hConsole, consoleBuffer))
 	{
 		auto error = GetLastError();
@@ -58,8 +78,15 @@ Console::Console() : pScreen_{nullptr}
 	}
 
 
-	SMALL_RECT windowRect{ .Left = 0, .Top = 0, .Right = SCREEN_WIDTH - 1, .Bottom = SCREEN_HEIGHT - 1 };
+	/*
+	BOOL WINAPI SetConsoleWindowInfo(
+	  _In_       HANDLE     hConsoleOutput,
+	  _In_       BOOL       bAbsolute,
+	  _In_ const SMALL_RECT *lpConsoleWindow
+	);
+	*/
 
+	SMALL_RECT windowRect{ .Left = 0, .Top = 0, .Right = SCREEN_WIDTH - 1, .Bottom = SCREEN_HEIGHT - 1 };
 	if (!SetConsoleWindowInfo(hConsole, TRUE, &windowRect))
 	{
 		auto error = GetLastError();
@@ -85,7 +112,7 @@ Console::Console() : pScreen_{nullptr}
 	// Clear screen buffer
 	ClearBuffer();
 
-	// Create the screen buffer
+	// Create a console screen buffer -- i.e., the portion of memory used by the console before the output is passed to the screen
 	hConsole_ = CreateConsoleScreenBuffer(
 		GENERIC_READ | GENERIC_WRITE,
 		0,
@@ -97,7 +124,13 @@ Console::Console() : pScreen_{nullptr}
 	if (!hConsole_)
 		throw("Failed to create the console screen buffer");
 
-	// Set the buffer to be active
+	/*
+	BOOL WINAPI SetConsoleActiveScreenBuffer(
+		_In_ HANDLE hConsoleOutput
+	);
+	*/
+
+	// Set the active screen buffer
 	if (!SetConsoleActiveScreenBuffer(hConsole_))
 		throw("Failed to set the active screen buffer");
 
@@ -182,12 +215,32 @@ void Console::Write(int x, int y, const std::wstring& text, WORD color)
 	//	swprintf(&pScreen_[pos], BUFFER_SIZE - pos, text.c_str());  // Ensure not to overwrite beyond BUFFER_SIZE
 }
 
+
+// Function that called the windows func WriteConsoleOutputCharacter (the unicode name WriteConsoleOutputCharacterW)
 void Console::Draw()
 {
 	DrawBorder();
+
+	/*
+	BOOL WINAPI WriteConsoleOutputCharacter(
+	  _In_  HANDLE  hConsoleOutput,
+	  _In_  LPCTSTR lpCharacter,
+	  _In_  DWORD   nLength,
+	  _In_  COORD   dwWriteCoord,
+	  _Out_ LPDWORD lpNumberOfCharsWritten
+	);
+	*/
+
 	// Handle all console drawings
 	WriteConsoleOutputCharacterW(hConsole_, pScreen_.get(), BUFFER_SIZE, { 0, 0 }, &BytesWritten_);
 }
+
+/*
+BOOL WINAPI GetConsoleCursorInfo(
+	_In_  HANDLE               hConsoleOutput,
+	_Out_ PCONSOLE_CURSOR_INFO lpConsoleCursorInfo
+);
+*/
 
 bool Console::ShowConsoleCursor(bool show)
 {
@@ -217,16 +270,6 @@ void Console::DrawPanelVert(int x, int y, size_t height, WORD color, const std::
 	for (int i = 0; i < height; i++)
 		Write(x, y + i, character, color);
 }
-
-//void Console::DrawPanel(int x, int y, size_t width, size_t height, WORD color, const std::wstring& height_char, const std::wstring& width_char)
-//{
-//	DrawPanelHorz(x, y, width, color, width_char);
-//	DrawPanelHorz(x, height, width, color, width_char);
-//
-//	DrawPanelVert(x, y + 1, height - 1, color, height_char);
-//	DrawPanelVert(x + width - 1, y + 1, height - 1, color, height_char);
-//
-//}
 
 
 void Console::DrawPanel(int x, int y, size_t width, size_t height, WORD color, const std::wstring& width_char,

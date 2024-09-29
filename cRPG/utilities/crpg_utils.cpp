@@ -40,3 +40,74 @@ Item::ItemType ItemTypeFromString(const std::string& item_type)
 		return Item::ItemType::NO_TYPE;
 }
 
+Equipment::EquipType EquipTypeFromString(const std::string& equip_type)
+{
+	if (equip_type == "Weapon")
+		return Equipment::EquipType::WEAPON;
+	else if (equip_type == "Armour")
+		return Equipment::EquipType::ARMOUR;
+	else if (equip_type == "Accessory")
+		return Equipment::EquipType::ACCESSORY;
+	else
+		return Equipment::EquipType::NO_TYPE;
+}
+
+WeaponProperties::WeaponType WeaponTypeFromString(const std::string& weapon_type)
+{
+	if (weapon_type == "Sword")
+		return WeaponProperties::WeaponType::SWORD;
+	else if (weapon_type == "Dagger")
+		return WeaponProperties::WeaponType::DAGGER;
+	else if (weapon_type == "Staff")
+		return WeaponProperties::WeaponType::STAFF;
+	else if (weapon_type == "Bow")
+		return WeaponProperties::WeaponType::BOW;
+	else
+		return WeaponProperties::WeaponType::NOT_A_WEAPON;
+}
+
+ArmourProperties::ArmourType ArmourTypeFromString(const std::string& armour_type)
+{
+	if (armour_type == "Headgear")
+		return ArmourProperties::ArmourType::HEADGEAR;
+	else if (armour_type == "Chest")
+		return ArmourProperties::ArmourType::CHEST_BODY;
+	else if (armour_type == "Footwear")
+		return ArmourProperties::ArmourType::FOOTWEAR;
+	else
+		return ArmourProperties::ArmourType::NOT_ARMOUR;
+
+}
+
+StatModifier::ModifierType ModifierTypeFromString(const std::string& modifier_type)
+{
+	if (modifier_type == "Strength")
+		return StatModifier::ModifierType::STRENGTH;
+	else if (modifier_type == "Intelligence")
+		return StatModifier::ModifierType::INTELLIGENCE;
+	else if (modifier_type == "Dexterity")
+		return StatModifier::ModifierType::DEXTERITY;
+	else if (modifier_type == "Speed")
+		return StatModifier::ModifierType::SPEED;
+	else
+		return StatModifier::ModifierType::NO_TYPE;
+}
+
+StatModifier::ElementalType ElementalTypeFromString(const std::string& elemental_type)
+{
+	if (elemental_type == "Earth")
+		return StatModifier::ElementalType::EARTH;
+	else if (elemental_type == "Fire")
+		return StatModifier::ElementalType::FIRE;
+	else if (elemental_type == "Ice")
+		return StatModifier::ElementalType::ICE;
+	else if (elemental_type == "Lightning")
+		return StatModifier::ElementalType::LIGHTNING;
+	else if (elemental_type == "Water")
+		return StatModifier::ElementalType::WATER;
+	else if (elemental_type == "Wind")
+		return StatModifier::ElementalType::WIND;
+	else
+		return StatModifier::ElementalType::NO_TYPE;
+}
+

@@ -9,10 +9,8 @@ struct StatModifier
 	enum class ElementalType { FIRE = 0, EARTH, WIND, ICE, WATER, LIGHTNING, NO_TYPE };
 
 	int statModifierVal;
-
 	ModifierType modifierType;
 	ElementalType elementalType;
-
 	std::wstring modifierTypeStr;
 
 	StatModifier(int val = 0, ModifierType mod_type = ModifierType::NO_TYPE, ElementalType elemental_type = ElementalType::NO_TYPE)
@@ -22,22 +20,22 @@ struct StatModifier
 	{
 		switch (mod_type)
 		{
-		case ModifierType::STRENGTH:
+		case StatModifier::ModifierType::STRENGTH:
 			modifierTypeStr = L"Strength";
 			break;
-		case ModifierType::SPEED:
+		case StatModifier::ModifierType::SPEED:
 			modifierTypeStr = L"Speed";
 			break;
-		case ModifierType::INTELLIGENCE:
+		case StatModifier::ModifierType::INTELLIGENCE:
 			modifierTypeStr = L"Intelligence";
 			break;
-		case ModifierType::DEXTERITY:
+		case StatModifier::ModifierType::DEXTERITY:
 			modifierTypeStr = L"Dexterity";
 			break;
-		case ModifierType::ELEMENTAL:
+		case StatModifier::ModifierType::ELEMENTAL:
 			modifierTypeStr = L"Elemental";
 			break;
-		case ModifierType::NO_TYPE:
+		case StatModifier::ModifierType::NO_TYPE:
 			modifierTypeStr = L"No_Type";
 			break;
 		default:

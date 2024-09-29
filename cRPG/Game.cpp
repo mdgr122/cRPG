@@ -9,7 +9,7 @@ bool Game::Init()
 	try 
 	{
 		// Creating a unique_ptr managing a new Console instance
-		pConsole_ = std::make_unique<Console>();
+		m_pConsole = std::make_unique<Console>();
 	}
 	catch (std::exception& e)
 	{
@@ -18,16 +18,16 @@ bool Game::Init()
 		return false;
 	}
 
-	hConsoleIn_ = GetStdHandle(STD_INPUT_HANDLE);
+	m_hConsoleIn = GetStdHandle(STD_INPUT_HANDLE);
 	
 	// Creating a unique_ptr managing a new Keyboard instance
 	// std::make_unique<Keyboard>() creates a new Keyboard object on the heap, and returns a std::unique_ptr<Keyboard> managing it. 
-	// The returned std::unique_ptr<Keyboard> is assigned to pKeyboard_, which now exclusively owns the Keyboard object. 
-	// When pKeyboard_ goes out of scope, the object is automatically deleted.
-	pKeyboard_ = std::make_unique<Keyboard>();
-	pStateMachine_ = std::make_unique<StateMachine>();
+	// The returned std::unique_ptr<Keyboard> is assigned to m_pKeyboard, which now exclusively owns the Keyboard object. 
+	// When m_pKeyboard goes out of scope, the object is automatically deleted.
+	m_pKeyboard = std::make_unique<Keyboard>();
+	m_pStateMachine = std::make_unique<StateMachine>();
 
-	pStateMachine_->PushState(std::make_unique<GameState>(*pConsole_, *pKeyboard_, *pStateMachine_));
+	m_pStateMachine->PushState(std::make_unique<GameState>(*m_pConsole, *m_pKeyboard, *m_pStateMachine));
 
 	return true;
 }
@@ -35,31 +35,31 @@ bool Game::Init()
 void Game::ProcessEvents()
 {
 	// Get number of Console Inputs
-	if (!GetNumberOfConsoleInputEvents(hConsoleIn_, &NumRead_))
+	if (!GetNumberOfConsoleInputEvents(m_hConsoleIn, &m_NumRead))
 	{
 		DWORD error = GetLastError();
 		CRPG_ERROR("Failed to get number of console input events! " + error);
 		return;
 	}
 
-	if (NumRead_ <= 0)
+	if (m_NumRead <= 0)
 		return;
 
 
 	// PeekConsoleInput doesn't remove any input from the buffer, compared to ReadConsoleInput, which does.
-	if (!PeekConsoleInput(hConsoleIn_, InRecBuff_, 128, &NumRead_))
+	if (!PeekConsoleInput(m_hConsoleIn, m_InRecBuf, 128, &m_NumRead))
 	{
 		DWORD error = GetLastError();
 		CRPG_ERROR("Failed to peek console input! " + error);
 		return;
 	}
 
-	for (int i = 0; i < NumRead_; i++)
+	for (int i = 0; i < m_NumRead; i++)
 	{
-		switch (InRecBuff_[i].EventType)
+		switch (m_InRecBuf[i].EventType)
 		{
 		case KEY_EVENT:
-			KeyEventProcess(InRecBuff_[i].Event.KeyEvent);
+			KeyEventProcess(m_InRecBuf[i].Event.KeyEvent);
 			break;
 		default:
 			break;
@@ -67,37 +67,37 @@ void Game::ProcessEvents()
 	}
 
 	// Flush Other Inputs because PeekConsoleInput doesn't remove them from the buffer.
-	FlushConsoleInputBuffer(hConsoleIn_);
+	FlushConsoleInputBuffer(m_hConsoleIn);
 }
 
 void Game::ProcessInputs()
 {
-	if (pKeyboard_->IsKeyPressed(KEY_ESCAPE))
-	{
-		is_running_ = false;
-	}
-	if (pStateMachine_->Empty())
+	if (m_pKeyboard->IsKeyPressed(KEY_ESCAPE))
+		m_bIsRunning = false;
+
+
+	if (m_pStateMachine->Empty())
 	{
 		CRPG_ERROR("No States exist in the StateMachine to Process Inputs");
-		is_running_ = false;
+		m_bIsRunning = false;
 		return;
 	}
-	pStateMachine_->GetCurrentState()->ProcessInputs();
+	m_pStateMachine->GetCurrentState()->ProcessInputs();
 
 }
 
 void Game::Update()
 {
 
-	if (pStateMachine_->Empty())
+	if (m_pStateMachine->Empty())
 	{
-		CRPG_ERROR("No States exist in the StateMachine to Update");
-		is_running_ = false;
+		//CRPG_ERROR("No States exist in the StateMachine to Update");
+		m_bIsRunning = false;
 		return;
 	}
 
-	pStateMachine_->GetCurrentState()->Update();
-	pKeyboard_->Update();
+	m_pStateMachine->GetCurrentState()->Update();
+	m_pKeyboard->Update();
 
 
 	// Updates the gametime and calls the instance irght away. Recall the instance is a singleton, so only one instance.
@@ -106,48 +106,50 @@ void Game::Update()
 
 void Game::Draw()
 {
-	if (pStateMachine_->Empty())
+	if (m_pStateMachine->Empty())
 	{
-		CRPG_ERROR("No States exist in the StateMachine to Draw");
-		is_running_ = false;
+		//CRPG_ERROR("No States exist in the StateMachine to Draw");
+		m_bIsRunning = false;
 		return;
 	}
 
-	pStateMachine_->GetCurrentState()->Draw();
-	//pConsole_->Write(10, 10, L"Hello World!", RED);
-	pConsole_->Draw();
+	m_pStateMachine->GetCurrentState()->Draw();
+	//m_pConsole->Write(10, 10, L"Hello World!", RED);
+	m_pConsole->Draw();
 }
 
 void Game::KeyEventProcess(KEY_EVENT_RECORD key_event)
 {
 	if (key_event.bKeyDown)
 	{
-		pKeyboard_->OnKeyDown(key_event.wVirtualKeyCode);
+		m_pKeyboard->OnKeyDown(key_event.wVirtualKeyCode);
 	}
 	else
 	{
-		pKeyboard_->OnKeyUp(key_event.wVirtualKeyCode);
+		m_pKeyboard->OnKeyUp(key_event.wVirtualKeyCode);
 
 	}
 }
 
 
-Game::Game() : is_running_{true}, pConsole_{nullptr}, pKeyboard_{nullptr}, pStateMachine_{nullptr}
+Game::Game() 
+	: m_bIsRunning{true}
+	, m_pConsole{nullptr}
+	, m_pKeyboard{nullptr}
+	, m_pStateMachine{nullptr}
 {
-
 }
 
 Game::~Game()
 {
-
 }
 
 void Game::Run()
 {
 	if (!Init())
-		is_running_ = false;
+		m_bIsRunning = false;
 	
-	while (is_running_) 
+	while (m_bIsRunning) 
 	{
 		ProcessEvents();
 		ProcessInputs();

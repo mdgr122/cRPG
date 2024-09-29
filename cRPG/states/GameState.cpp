@@ -110,7 +110,9 @@ void GameState::Draw()
 	std::wstring time_ms = std::to_wstring(m_Timer.ElapsedMS());
 	m_Console.Write(25, 26, time_ms, BLUE);
 	m_Console.Write(25, 25, time_seconds, RED);
-	m_Selector.Draw();
+	
+	// This is where the initialization of the GameState::GameState object is drawn 
+	m_Selector.Draw(); // m_Selector(console, keyboard, {L"Start", L"Settings", L"Exit"})
 	m_Console.Draw();
 }
 

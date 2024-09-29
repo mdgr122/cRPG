@@ -1,0 +1,29 @@
+<ArmourDefs>
+	<Arms>
+		<Armour>
+			<Name>Leather Shirt</Name>
+			<Description>Simple shirt made of quality leather</Description>
+			<Type>Armour</Type>
+			<BuyPrice>300</BuyPrice>
+			<ArmourProperties>
+				<DefensePwr>20</DefensePwr>
+				<ArmourType>Chest</ArmourType>
+		</ArmourProperties>
+			<StatModifier>
+				<ModValue>2</ModValue>
+				<ModType>Speed</ModType>
+			</StatModifier>
+		</Armour>
+
+		<Armour>
+			<Name>Leather Cap</Name>
+			<Description>A snug leather cap that provides little defense</Description>
+			<Type>Armour</Type>
+			<BuyPrice>125</BuyPrice>
+			<ArmourProperties>
+				<DefensePwr>7</DefensePwr>
+				<ArmourType>Headgear</ArmourType>
+			</ArmourProperties>
+		</Armour>
+	</Arms>
+</ArmourDefs>

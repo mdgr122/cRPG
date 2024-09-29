@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Stats.h"
+#include "Logger.h"
+#include "utilities/crpg_utils.h"
 
 
 Stats::Stats()
@@ -41,8 +43,10 @@ const int Stats::GetStat(const std::wstring& key)
 {
 	if (m_StatList.find(key) == m_StatList.end())
 	{
-		//CRPG_ERROR("[" + key + "] is not a valid stat")
-		std::wcout << L"[" << key << L"] is not a valid stat\n";
+		//std::string key_str = WideToStr(key);
+		//CRPG_ERROR("Error: " + key_str);
+		CRPG_ERROR("[" + WideToStr(key) + "] is not a valid Stat!");
+		//std::wcout << L"[" << key << L"] is not a valid stat\n";
 		return 0;
 	}
 	return m_StatList[key];
@@ -52,8 +56,8 @@ const int Stats::GetModifier(const std::wstring& key)
 {
 	if (m_StatModifierList.find(key) == m_StatModifierList.end())
 	{
-		//CRPG_ERROR("[" + key + "] is not a valid stat")
-		std::wcout << L"[" << key << L"] is not a valid stat modifier\n";
+		// Temporarily diabling this log bc stat modifiers haven't been created yet, and it's creating log msg's every tick
+		//CRPG_ERROR("[" + WideToStr(key) + "] is not a valid Stat Modifier!");
 		return 0;
 	}
 	return m_StatModifierList[key];
@@ -74,7 +78,8 @@ void Stats::SetModifier(const std::wstring& key, int value)
 {
 	if (m_StatModifierList.find(key) == m_StatModifierList.end())
 	{
-		std::wcout << L"[" << key << L"] is not a valid stat modifier\n";
+		//std::wcout << L"[" << key << L"] is not a valid stat modifier\n";
+		CRPG_ERROR("[" + WideToStr(key) + "] is not a valid Stat Modifier!");
 		return;
 	}
 	m_StatModifierList[key] = value;
