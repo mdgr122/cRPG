@@ -46,7 +46,7 @@ public:
 
 	// We want to use the equipment by polymorphism, so we're passing in a ptr to equipment that contains the child classes
 	//std::unordered_map<Equipment::EquipType, std::shared_ptr<Equipment>> GetEquippedItems() { return m_mapEquipment; }
-	std::unordered_map<Stats::EquipSlots, std::shared_ptr<Equipment>> GetEquippedItemSlots() { return m_mapEquipmentSlots; }
+	std::unordered_map<Stats::EquipSlots, std::shared_ptr<Equipment>>& GetEquippedItemSlots() { return m_mapEquipmentSlots; }
 
 
 	Stats& GetStats() { return m_Stats; }

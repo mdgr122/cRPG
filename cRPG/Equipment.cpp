@@ -17,18 +17,24 @@ Weapon::Weapon(const std::wstring& name, const std::wstring& description, int bu
 	SetEquipType(EquipType::WEAPON);
 	m_WeaponProperties = weapon_properties;
 	m_ArmourProperties = ArmourProperties(); // Set a weapon to an empty armour properties which is 0 defensive power
+	//m_Value = m_WeaponProperties.attackPower;
 }
 
 bool Weapon::OnEquip(Player& player)
 {
-	const auto& item_power = GetValue();
+ 	const auto& item_power = GetValue();
+	//auto& player_stats = player.GetStats();
 	auto& player_stats = player.GetStats();
+
 	player_stats.SetEquipmentValue(Stats::EquipSlots::WEAPON, item_power);
+
+
 	// Set the weapon power
 	const auto& stat_modifier = GetStatModifier();
 
 	if (stat_modifier.modifierType != StatModifier::ModifierType::NO_TYPE)
 		player_stats.SetModifier(stat_modifier.modifierTypeStr, stat_modifier.statModifierVal);
+
 
 	// equip the item
 	Equip();

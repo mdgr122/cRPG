@@ -1,4 +1,3 @@
-#pragma once
 #include "Keyboard.h"
 #include "Logger.h"
 
@@ -19,29 +18,30 @@ void Keyboard::Update()
 void Keyboard::OnKeyDown(int key)
 {
 	// Check to see if key is defined in virtual key list
-	if (key > KEY_LAST)
+	//if (key >= KEY_LAST)
+	if (key < 0 || key >= KEY_LAST)
 	{
 		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
 		return;
 	}
-	return m_Keys[key].Update(true);
+	m_Keys[key].Update(true);
 }
 
 void Keyboard::OnKeyUp(int key)
 {
 	// Check to see if key is defined in virtual key list
-	if (key > KEY_LAST)
+	if (key < 0 || key >= KEY_LAST)
 	{
 		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
 		return;
 	}
-	return m_Keys[key].Update(false);
+	m_Keys[key].Update(false);
 }
 
 bool Keyboard::IsKeyHeld(int key) const
 {
 	// Check to see if key is defined in virtual key list
-	if (key > KEY_LAST)
+	if (key < 0 || key >= KEY_LAST)
 	{
 		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
 		return false;
@@ -52,7 +52,7 @@ bool Keyboard::IsKeyHeld(int key) const
 bool Keyboard::IsKeyPressed(int key) const
 {
 	// Check to see if key is defined in virtual key list
-	if (key > KEY_LAST)
+	if (key < 0 || key >= KEY_LAST)
 	{
 		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
 		return false;
@@ -63,7 +63,7 @@ bool Keyboard::IsKeyPressed(int key) const
 bool Keyboard::IsKeyReleased(int key) const
 {
 	// Check to see if key is defined in virtual key list
-	if (key > KEY_LAST)
+	if (key < 0 || key >= KEY_LAST)
 	{
 		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
 		return false;

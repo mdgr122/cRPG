@@ -22,8 +22,10 @@ struct SelectorParams
 
 	// x and y coords -- x=20, y=10 means 20 in and 10 down in terminal - Old cursor ->
 	SelectorParams(
+		//int x = 20, int y = 10, int columns = 1, int current_x = 0, int current_y = 0,
+		//int spacing_x = 20, int spacing_y = 5, std::wstring cursor = L">"
 		int x = 20, int y = 10, int columns = 1, int current_x = 0, int current_y = 0,
-		int spacing_x = 20, int spacing_y = 5, std::wstring cursor = L">"
+		int spacing_x = 20, int spacing_y = 1, std::wstring cursor = L">"
 	)
 	{
 		this->x = x;
@@ -191,7 +193,7 @@ inline void Selector<T>::MoveLeft()
 template<typename T>
 inline void Selector<T>::MoveRight()
 {
-	m_Params.currentX = std::max(m_Params.currentX + 1, m_Params.columns - 1);
+	m_Params.currentX = std::min(m_Params.currentX + 1, m_Params.columns - 1);
 }
 
 // Get current index that cursor is pointing at, then call the OnSelection() function for that index
@@ -238,8 +240,8 @@ inline void Selector<T>::Draw()
 	int itemIndex = 0;
 	int x = m_Params.x;
 	int y = m_Params.y;
-	int rowHeight = m_Params.spacingY;
-	int spacingX = m_Params.spacingX;
+	int rowHeight = m_Params.spacingY; // vertical spacing between rows
+	int spacingX = m_Params.spacingX; // horizontal spacing between items
 
 	int maxData = m_Data.size();
 
@@ -254,33 +256,34 @@ inline void Selector<T>::Draw()
 				// This is where the cursor is, if these two conditions are TRUE
 				if (m_bShowCursor)
 				{
-					// Reset areas behind cursor as it moves -- I.e., as the cursor moves, clear the last position from the console
-					//if (i != 0)
-					//	m_Console.Write(x - (x == 0 ? 0 : 2), y - rowHeight, L" ");
-
-					//m_Console.Write(x - (x == 0 ? 0 : 2), y + rowHeight, L" ");
-					//m_Console.Write(x - (x == 0 ? 0 : 2) - spacingX, y, L" ");
-					//m_Console.Write(x - (x == 0 ? 0 : 2) + spacingX, y, L" ");
-
+					// Clear the cell above the current cursor position, if not on the first row.
 					if (m_Params.currentY != 0)
 						m_Console.Write(x - (x == 0 ? 0 : 2), y - rowHeight, L" ");
 
+					// Clear the cell to the left of the current cursor position, if not in the first column.
 					if (m_Params.currentX != 0)
 						m_Console.Write(x - (x == 0 ? 0 : 2) - spacingX, y, L" ");
 
+					// Clear the cell below the current cursor position, if not on the last row.
 					if (m_Params.currentY != m_Rows - 1)
 						m_Console.Write(x - (x == 0 ? 0 : 2), y + rowHeight, L" ");
 
+					// Clear the cell to the right of the current cursor position, if not in the last column.
 					if (m_Params.currentX != m_Params.columns - 1)
 						m_Console.Write(x - (x == 0 ? 0 : 2) + spacingX, y, L" ");
 
-					// Draw the cusor
+					// **Draw the Cursor**
+					// Render the cursor symbol at the current (x, y) position with the specified color.
 					m_Console.Write(x - (x == 0 ? 0 : 2), y, m_Params.cursor, RED);
 
 				}
 				else
 				{
 					// If m_bShowCusor == FALSE, then clear the cursor. Ternary operator to ensure we don't subtract from 0
+					//m_Console.Write(x - (x == 0 ? 0 : 2), y, L" ");
+					// **Hide the Cursor**
+					
+					// If the cursor should not be displayed, clear the current cell.
 					m_Console.Write(x - (x == 0 ? 0 : 2), y, L" ");
 				}
 			}
@@ -290,12 +293,14 @@ inline void Selector<T>::Draw()
 				// grab the index of a vector that is beyond the size of the vector
 				T item = m_Data[itemIndex];
 				m_OnDrawItem(x, y, item);
-				x += spacingX;
+				x += spacingX; // moved to next horizontal position
 				itemIndex++; // Increments the index
 			}
 		}
-		// dealing with rows now - essentially, the second for loop was iterating through the columns on row 0, we want to then move down to row 1 and do the same.
-		y += rowHeight;
-		x = m_Params.x;
+		// move to next row | dealing with rows now - essentially, the second for loop was iterating through the columns on row 0, we want to then move down to row 1 and do the same.
+		y += rowHeight; // Increment y by spacingY for the next row
+		x = m_Params.x; // Reset x to the starting position
+		//std::cout << "y increment y: [" << y << "] by rowHeight: [" << rowHeight << "]" << std::endl;
+		//std::cout << "x pos: [" << x << "]" << std::endl;
 	}
 }

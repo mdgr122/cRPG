@@ -51,7 +51,10 @@ struct WeaponProperties
 	WeaponType weaponType;
 
 	WeaponProperties(int attack_power = 0, WeaponType weapon_type = WeaponType::NOT_A_WEAPON)
-		: attackPower{attack_power}, weaponType { weapon_type} {}
+		: attackPower{attack_power}
+		, weaponType {weapon_type} 
+	{
+	}
 };
 
 struct ArmourProperties
@@ -61,7 +64,10 @@ struct ArmourProperties
 	ArmourType armourType;
 
 	ArmourProperties(int defense_power = 0, ArmourType armour_type = ArmourType::NOT_ARMOUR)
-		: defensePower{ defense_power }, armourType{ armour_type } {}
+		: defensePower{ defense_power }
+		, armourType{ armour_type } 
+	{
+	}
 };
 
 class Equipment

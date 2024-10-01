@@ -26,7 +26,6 @@ public:
 private:
 	const int PANEL_BARS = 90;
 	const int MENU_SIZE = 27;
-	const int CLEAR_ROW = 90;
 	const int SMALL_PANEL_BAR = 29;
 
 	//Party& m_Party;

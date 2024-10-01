@@ -1,5 +1,6 @@
 #include "GameMenuState.h"
 #include "ItemMenuState.h"
+#include "EquipmentMenuState.h"
 #include "../Party.h"
 #include "../Player.h"
 #include "../Console.h"
@@ -19,17 +20,19 @@ GameMenuState::GameMenuState(Party& party, Console& console, StateMachine& state
 		console,
 		keyboard,
 		{L"Items", L"Magic", L"Equipment", L"Stats", L"Order", L"Save", L"Exit"},
-		SelectorParams{30, 8, 1, 0, 4}} // x, y, columns, currentX, currentY, spacingX, spacingY
-		, m_PlayerSelector{
-			console,
-			keyboard,
-			std::bind(&GameMenuState::OnPlayerSelect, this, _1, _2), // _1, _2, std::bind placeholder args.
-			std::bind(&GameMenuState::OnDrawPlayerSelect, this, _1, _2, _3), // _1, _2, std::bind placeholder args.
-			party.GetParty(),
-			//SelectorParams{69, 13, 1, 0, 10} 
-			SelectorParams{69, 13, 1, 0, 0, 20, 10} // x=69, y=13, columns=1, current_x=0, current_y=0, spacing_x=20, spacing_y=10
-		}
-		//SelectorParams{70, 20, 1, 0, 4}}
+		//SelectorParams{30, 8, 1, 0, 4}
+		SelectorParams{30, 8, 1, 0, 0}
+	} // x, y, columns, currentX, currentY, spacingX, spacingY
+	, m_PlayerSelector{
+		console,
+		keyboard,
+		std::bind(&GameMenuState::OnPlayerSelect, this, _1, _2), // _1, _2, std::bind placeholder args.
+		std::bind(&GameMenuState::OnDrawPlayerSelect, this, _1, _2, _3), // _1, _2, std::bind placeholder args.
+		party.GetParty(),
+		//SelectorParams{69, 13, 1, 0, 10} 
+		SelectorParams{69, 13, 1, 0, 0, 10, 10} // x=69, y=13, columns=1, current_x=0, current_y=0, spacing_x=20, spacing_y=10
+		//SelectorParams{69, 13, 1, 0, 0}
+	}
 	, m_bExitGame{false}
 	, m_bInMenuSelect{true}
 	, m_ScreenWidth{console.GetScreenWidth()}
@@ -199,14 +202,13 @@ void GameMenuState::OnPlayerSelect(int index, std::vector<std::shared_ptr<Player
 	switch (m_eSelectType)
 	{
 	case SelectType::ITEM:
-		// TODO: Create new Item State
 		m_StateMachine.PushState(std::make_unique<ItemState>(*player, m_Console, m_StateMachine, m_Keyboard));
 		break;
 	case SelectType::MAGIC:
 		// TODO: Create new Magic State
 		break;
 	case SelectType::EQUIPMENT:
-		// TODO: Create new Equipment State
+		m_StateMachine.PushState(std::make_unique<EquipmentMenuState>(*player, m_Console, m_StateMachine, m_Keyboard));
 		break;
 	case SelectType::STATS:
 		// TODO: Create new Stats State

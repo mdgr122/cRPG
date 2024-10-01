@@ -9,7 +9,7 @@ Stats::Stats()
 {
 }
 
-Stats::Stats(int strength, int intelligence, int speed, int dexteriy, int stamina)
+Stats::Stats(int strength, int intelligence, int speed, int dexterity, int stamina)
 	: m_StatList{
 		{L"Attack", 0},
 		{L"Defense", 0},
@@ -17,7 +17,7 @@ Stats::Stats(int strength, int intelligence, int speed, int dexteriy, int stamin
 		{L"Strength", strength},
 		{L"Intelligence", intelligence},
 		{L"Speed", speed},
-		{L"Dexterity", dexteriy},
+		{L"Dexterity", dexterity},
 		{L"Stamina", stamina}
 	},
 	m_StatModifierList{
@@ -92,14 +92,14 @@ void Stats::SetEquipmentValue(EquipSlots slot, int value)
 		std::wcout << L"Invalid slot!\n";
 		return;
 	}
-	m_EquipSlotList[slot];
+	m_EquipSlotList[slot] = value;
 }
 
 void Stats::SetStat(const std::wstring& key, int value)
 {
 	if (m_StatList.find(key) == m_StatList.end())
 	{
-		//CRPG_ERROR("[" + key + "] is not a valid stat")
+		//CRPG_ERROR("[" + key + "] is not a valid stat");
 		std::wcout << L"[" << key << L"] is not a valid stat\n";
 		return;
 	}
@@ -108,16 +108,43 @@ void Stats::SetStat(const std::wstring& key, int value)
 
 void Stats::UpdateStats()
 {
-	// Update attack power stat
-	m_StatList[L"Attack"] = m_EquipSlotList[EquipSlots::WEAPON] + (m_StatList[L"Strength"] + m_StatModifierList[L"Strength"]) +
-		((m_StatList[L"Intelligence"] + m_StatModifierList[L"Intelligence"]) / 5) +
-		((m_StatList[L"Dexterity"] + m_StatModifierList[L"Dexterity"]) / 5);
+	// Calculate base stats with modifiers
+	int baseStrength = m_StatList[L"Strength"] + m_StatModifierList[L"Strength"];
+	int baseIntelligence = m_StatList[L"Intelligence"] + m_StatModifierList[L"Intelligence"];
+	int baseDexterity = m_StatList[L"Dexterity"] + m_StatModifierList[L"Dexterity"];
+	int baseSpeed = m_StatList[L"Speed"] + m_StatModifierList[L"Speed"];
 
-	// Update defense stat
-	m_StatList[L"Attack"] = m_EquipSlotList[EquipSlots::HEADGEAR] + m_EquipSlotList[EquipSlots::CHEST_BODY] + m_EquipSlotList[EquipSlots::FOOTWEAR] +
-		(m_StatList[L"Strength"] + m_StatModifierList[L"Strength"]) +
-		((m_StatList[L"Intelligence"] + m_StatModifierList[L"Intelligence"]) / 5) +
-		((m_StatList[L"Speed"] + m_StatModifierList[L"Speed"]) / 5) +
-		((m_StatList[L"Dexterity"] + m_StatModifierList[L"Dexterity"]) / 5);
+	// Update attack power stat
+	m_StatList[L"Attack"] = m_EquipSlotList[EquipSlots::WEAPON] +
+		baseStrength +
+		(baseIntelligence / 5) +
+		(baseDexterity / 5);
+
+	// Update defense power stat
+	int totalArmorDefense = m_EquipSlotList[EquipSlots::HEADGEAR] +
+		m_EquipSlotList[EquipSlots::CHEST_BODY] +
+		m_EquipSlotList[EquipSlots::FOOTWEAR];
+
+	m_StatList[L"Defense"] = totalArmorDefense +
+		(baseStrength / 5) +
+		(baseIntelligence / 5) +
+		(baseSpeed / 5) +
+		(baseDexterity / 5);
 }
+
+//void Stats::UpdateStats()
+//{
+//	// Update attack power stat
+//	m_StatList[L"Attack"] = m_EquipSlotList[EquipSlots::WEAPON] +
+//		(m_StatList[L"Strength"] + m_StatModifierList[L"Strength"]) +
+//		((m_StatList[L"Intelligence"] + m_StatModifierList[L"Intelligence"]) / 5) +
+//		((m_StatList[L"Dexterity"] + m_StatModifierList[L"Dexterity"]) / 5);
+//
+//	// Update defense power stat
+//	m_StatList[L"Defense"] = m_EquipSlotList[EquipSlots::HEADGEAR] + m_EquipSlotList[EquipSlots::CHEST_BODY] + m_EquipSlotList[EquipSlots::FOOTWEAR] +
+//		((m_StatList[L"Strength"] + m_StatModifierList[L"Strength"]) / 5) +
+//		((m_StatList[L"Intelligence"] + m_StatModifierList[L"Intelligence"]) / 5) +
+//		((m_StatList[L"Speed"] + m_StatModifierList[L"Speed"]) / 5) +
+//		((m_StatList[L"Dexterity"] + m_StatModifierList[L"Dexterity"]) / 5);
+//}
  

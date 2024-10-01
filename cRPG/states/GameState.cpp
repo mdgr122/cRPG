@@ -27,8 +27,9 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 	// Create an item to add to inventory test
 	auto potion = ItemCreator::CreateItem(Item::ItemType::HEALTH, L"Potion", L"Heals for a small amount", 25, 50);
 	auto strong_potion = ItemCreator::CreateItem(Item::ItemType::HEALTH, L"Strong Potion", L"Heals a large amount of health", 250, 300);
+	
 	auto sword = ItemCreator::CreateEquipment(Equipment::EquipType::WEAPON, 
-		WeaponProperties(15, WeaponProperties::WeaponType::SWORD),
+		WeaponProperties(50, WeaponProperties::WeaponType::SWORD),
 		ArmourProperties(),
 		StatModifier(3, StatModifier::ModifierType::STRENGTH),
 		L"Iron Sword",
@@ -38,19 +39,27 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 	auto helmet = ItemCreator::CreateEquipment(Equipment::EquipType::ARMOUR,
 		WeaponProperties(),
 		ArmourProperties(30, ArmourProperties::ArmourType::HEADGEAR),
-		StatModifier(),
+		StatModifier(6, StatModifier::ModifierType::SPEED),
 		L"Iron Helmet",
 		L"A battered iron helmet",
 		45, 15);
 
+	auto chest = ItemCreator::CreateEquipment(Equipment::EquipType::ARMOUR,
+		WeaponProperties(),
+		ArmourProperties(45, ArmourProperties::ArmourType::CHEST_BODY),
+		StatModifier(28, StatModifier::ModifierType::STRENGTH),
+		L"Iron Chest",
+		L"An Iron Chestplate",
+		300, 185);
 
 	m_Party->GetInventory().AddItem(std::move(potion));
 	m_Party->GetInventory().AddItem(std::move(strong_potion));
 	m_Party->GetInventory().AddEquipment(std::move(sword));
-	m_Party->GetInventory().AddEquipment(std::move(helmet));
+	//m_Party->GetInventory().AddEquipment(std::move(helmet));
+	m_Party->GetInventory().AddEquipment(std::move(chest));
 
 	
-	auto player = std::make_shared<Player>(L"Test PLayer", L"1", m_Party->GetInventory(), 1, 100);
+	auto player = std::make_shared<Player>(L"Test Player", L"1", m_Party->GetInventory(), 1, 100);
 	//auto player2 = std::make_shared<Player>(L"Player2", L"2", m_Party->GetInventory(), 1, 100);
 	m_Party->AddMember(std::move(player));
 	//m_Party->AddMember(std::move(player2));

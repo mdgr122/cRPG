@@ -205,8 +205,8 @@ void Console::Write(int x, int y, const std::wstring& text, WORD color)
 	// We do not want to write to a position that is beyond the BUFFER_SIZEb
 	if (pos + text.size() >= BUFFER_SIZE)
 	{
-		CRPG_ERROR("Trying to write to a position beyond the BUFFER_SIZE")
-			return;
+		CRPG_ERROR("Trying to write to a position beyond the BUFFER_SIZE");
+		return;
 	}
 
 	swprintf(&pScreen_[pos], BUFFER_SIZE, text.c_str());

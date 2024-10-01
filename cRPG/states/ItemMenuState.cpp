@@ -214,11 +214,19 @@ void ItemState::OnItemSelect(int index, std::vector<std::shared_ptr<Item>> data)
 void ItemState::RenderItem(int x, int y, std::shared_ptr<Item> item)
 {
 	int index = m_ItemSelector.GetIndex();
+	static int prevIndex = 0;
 	const auto& data = m_ItemSelector.GetData();
 
 	const std::wstring& item_name = item->GetItemName();
 	m_Console.Write(x, y, item_name);
 	m_Console.Write(x + static_cast<int>(item_name.size() + 1), y, std::to_wstring(item->GetCount()));
+
+	if (index != prevIndex)
+	{
+		// Clear description
+		m_Console.DrawPanelHorz(m_PanelBarX, 12, PANEL_BARS, BLUE, L" ");
+		prevIndex = index;
+	}
 
 	if (index < data.size())
 	{
