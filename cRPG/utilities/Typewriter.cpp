@@ -45,6 +45,14 @@ TypeWriter::~TypeWriter()
 {
 }
 
+
+// Processes a given wstring by splitting it into smaller chunks based on the set text wrap length (m_TextWrap).
+// Each chunk is added to m_sTextChunks, which will be used by the hConsole buffer for typewriter-style display.
+// The function evaluates the length of the current line buffer and determines whether to add a word to the current line or start a new line.
+// Long words that do not fit within the remaining space are split appropriately, ensuring that each chunk respects the text wrap length limit.
+// Conditions are optimized to ensure proper handling of exact line fits, long word splits, and efficient buffer management.
+// Finally, SetBorderProperties() is called to configure text display properties.
+
 bool TypeWriter::SetText(const std::wstring& text)
 {
 	m_sText = text;
@@ -53,11 +61,8 @@ bool TypeWriter::SetText(const std::wstring& text)
 	std::wstring text_word;
 	std::vector<std::wstring> text_words;
 	std::wstring line_buffer;
-	std::vector<std::wstring> processed_words;
 	std::vector<std::wstring> processed_lines;
 
-
-	// "This is a longer test paragraph. It includes multiple linesitems of text to thoroughly test wide string handling in C++. This message is continuing for further testing."
 
 	while (wss >> text_word)
 	{
@@ -105,7 +110,7 @@ bool TypeWriter::SetText(const std::wstring& text)
 
 				line_buffer += (L" " + split_first);
 
-				processed_lines.push_back(line_buffer);
+				//processed_lines.push_back(line_buffer);
 				m_sTextChunks.push_back(line_buffer);
 				line_buffer = split_second;
 
@@ -120,7 +125,7 @@ bool TypeWriter::SetText(const std::wstring& text)
 				}
 				else 
 				{
-					processed_lines.push_back(line_buffer);
+					//processed_lines.push_back(line_buffer);
 					m_sTextChunks.push_back(line_buffer);
 					line_buffer = elem;
 
@@ -133,7 +138,7 @@ bool TypeWriter::SetText(const std::wstring& text)
 	// Ensure any remaining split_second or line_buffer content is pushed
 	if (!line_buffer.empty())
 	{
-		processed_lines.push_back(line_buffer);
+		//processed_lines.push_back(line_buffer);
 		m_sTextChunks.push_back(line_buffer);
 	}
 
