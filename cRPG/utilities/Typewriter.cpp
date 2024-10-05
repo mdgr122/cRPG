@@ -52,7 +52,6 @@ TypeWriter::~TypeWriter()
 // Long words that do not fit within the remaining space are split appropriately, ensuring that each chunk respects the text wrap length limit.
 // Conditions are optimized to ensure proper handling of exact line fits, long word splits, and efficient buffer management.
 // Finally, SetBorderProperties() is called to configure text display properties.
-
 bool TypeWriter::SetText(const std::wstring& text)
 {
 	m_sText = text;
