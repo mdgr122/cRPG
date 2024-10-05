@@ -20,8 +20,7 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 	, m_Party{nullptr}
 	, m_Timer{}
 	, m_TypeWriter{console, 50, 4, 
-	//L"This is a longer test paragraph. It includes multiple lineitems of text to thoroughly test wide string handling in C++. This message is continuing for further testing."
-	L"This is a longer test paragraph. It includes multiple lineitems of text to thoroughly test wide string handling in C++. This is another longer test paragraph. It includes several lineitems of text to thoroughly test wide string handling in C++."
+	L"The adventure began at the crack of dawn. Travelers from distant lands gathered near the ancient castle. The procession of carriages and horses stretched for miles, with every person eager to reach their final destination. As the sun rose higher, the landscape slowly transformed. Mountains loomed in the distance, casting long shadows over the vast plains. Many whispered tales of hidden treasures buried deep within the mountains. Some spoke of dangers lurking within, while others were drawn to the unknown mysteries that awaited. The road ahead was long, but their determination never wavered."
 	, 60, 5, WHITE, BLUE}
 	//, m_TestInventory{} // TO BE REMOVED
 {

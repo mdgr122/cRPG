@@ -64,13 +64,10 @@ bool TypeWriter::SetText(const std::wstring& text)
 		text_words.push_back(text_word);
 	}
 
-	size_t i = 0;
-	size_t j = 0;
 	std::wstring split_first = L"";
 	std::wstring split_second = L"";
 	for (auto& elem : text_words)
 	{
-
 		size_t split_pos{};
 		size_t line_buff_length = line_buffer.length();
 		if (line_buffer.length() + elem.length() + 1 <= m_TextWrap)
@@ -92,8 +89,7 @@ bool TypeWriter::SetText(const std::wstring& text)
 					line_buffer += L" ";
 				}
 				line_buffer += elem;
-
-
+				break;
 			}
 			else if (elem.length() >= 7 && (line_buffer.length() != m_TextWrap) && (line_buffer.length() + elem.length() + 1) > m_TextWrap && (m_TextWrap - line_buffer.length() > 4))
 			{
@@ -101,7 +97,6 @@ bool TypeWriter::SetText(const std::wstring& text)
 				// If word length is greater than 8, and the buffer + word length is greater than the textwrap length.
 				split_first = L"";
 
-				//split_pos = elem.length() / 2;
 				split_pos = m_TextWrap - (line_buffer.length() + 2);
 
 				auto split_strings = CRPG_Globals::GetInstance().wstr_split_to_wstr(elem, split_pos);
@@ -114,60 +109,49 @@ bool TypeWriter::SetText(const std::wstring& text)
 				m_sTextChunks.push_back(line_buffer);
 				line_buffer = split_second;
 
-
 			}
 			else
 			{
-				//line_buffer = split_second;
-				processed_lines.push_back(line_buffer);
-				m_sTextChunks.push_back(line_buffer);
+
 				if (split_second != L"")
 				{
-					line_buffer = split_second;// split_second + L" " + elem;
+					line_buffer = split_second;
 					split_second = L"";
 				}
 				else 
 				{
+					processed_lines.push_back(line_buffer);
+					m_sTextChunks.push_back(line_buffer);
 					line_buffer = elem;
 
 				}
 			}
-
-			processed_lines.push_back(line_buffer);
-			m_sTextChunks.push_back(line_buffer);
-			line_buffer.clear();
+			split_second.clear();
 		}
-
-
-		i++;
 	}
 
 	// Ensure any remaining split_second or line_buffer content is pushed
 	if (!line_buffer.empty())
 	{
 		processed_lines.push_back(line_buffer);
+		m_sTextChunks.push_back(line_buffer);
 	}
 
 	std::wcout << "\nProcessed Lines:\n";
-	for (const auto& elem : processed_lines)
+	for (const auto& elem : m_sTextChunks)
 	{
 		std::wcout << elem << " ";
 	}
 	std::cout << std::endl;
 
-	//if (!SetBorderProperties())
-	//{
-	//	CRPG_ERROR("Failed to set the border properties!");
-	//	return false;
-	//}
+	if (!SetBorderProperties())
+	{
+		CRPG_ERROR("Failed to set the border properties!");
+		return false;
+	}
 
-
-
-	//m_sTextChunks.push_back("A");
 
 	return true;
-
-
 }
 
 void TypeWriter::UpdateText()
