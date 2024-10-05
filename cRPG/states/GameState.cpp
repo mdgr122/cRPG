@@ -19,6 +19,10 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 	, m_Selector(console, keyboard, {L"Start", L"Settings", L"Exit"})
 	, m_Party{nullptr}
 	, m_Timer{}
+	, m_TypeWriter{console, 50, 4, 
+	//L"This is a longer test paragraph. It includes multiple lineitems of text to thoroughly test wide string handling in C++. This message is continuing for further testing."
+	L"This is a longer test paragraph. It includes multiple lineitems of text to thoroughly test wide string handling in C++. This is another longer test paragraph. It includes several lineitems of text to thoroughly test wide string handling in C++."
+	, 60, 5, WHITE, BLUE}
 	//, m_TestInventory{} // TO BE REMOVED
 {
 
@@ -39,7 +43,7 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 	auto helmet = ItemCreator::CreateEquipment(Equipment::EquipType::ARMOUR,
 		WeaponProperties(),
 		ArmourProperties(30, ArmourProperties::ArmourType::HEADGEAR),
-		StatModifier(6, StatModifier::ModifierType::SPEED),
+		StatModifier(28, StatModifier::ModifierType::STRENGTH),
 		L"Iron Helmet",
 		L"A battered iron helmet",
 		45, 15);
@@ -47,7 +51,7 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 	auto chest = ItemCreator::CreateEquipment(Equipment::EquipType::ARMOUR,
 		WeaponProperties(),
 		ArmourProperties(45, ArmourProperties::ArmourType::CHEST_BODY),
-		StatModifier(28, StatModifier::ModifierType::STRENGTH),
+		StatModifier(),
 		L"Iron Chest",
 		L"An Iron Chestplate",
 		300, 185);
@@ -55,11 +59,11 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 	m_Party->GetInventory().AddItem(std::move(potion));
 	m_Party->GetInventory().AddItem(std::move(strong_potion));
 	m_Party->GetInventory().AddEquipment(std::move(sword));
-	//m_Party->GetInventory().AddEquipment(std::move(helmet));
+	m_Party->GetInventory().AddEquipment(std::move(helmet));
 	m_Party->GetInventory().AddEquipment(std::move(chest));
 
 	
-	auto player = std::make_shared<Player>(L"Test Player", L"1", m_Party->GetInventory(), 1, 100);
+	auto player = std::make_shared<Player>(L"Test Player", L"1", m_Party->GetInventory(), 1, 100, 20);
 	//auto player2 = std::make_shared<Player>(L"Player2", L"2", m_Party->GetInventory(), 1, 100);
 	m_Party->AddMember(std::move(player));
 	//m_Party->AddMember(std::move(player2));
@@ -90,6 +94,7 @@ void GameState::Update()
 {
 	// Not sure if correctly placed
 	//m_Console.ClearBuffer();
+	m_TypeWriter.UpdateText();
 }
 
 void GameState::Draw()
@@ -128,6 +133,9 @@ void GameState::Draw()
 	
 	// This is where the initialization of the GameState::GameState object is drawn 
 	m_Selector.Draw(); // m_Selector(console, keyboard, {L"Start", L"Settings", L"Exit"})
+
+	m_TypeWriter.Draw();
+
 	m_Console.Draw();
 }
 
@@ -139,7 +147,8 @@ void GameState::ProcessInputs()
 		return;
 	}
 
-	if (m_Keyboard.IsKeyPressed(KEY_M))
+	//if (m_Keyboard.IsKeyPressed(KEY_M))
+	if (m_Keyboard.IsKeyPressed(KEY_SPACE))
 	{
 		m_StateMachine.PushState(std::make_unique<GameMenuState>(*m_Party, m_Console, m_StateMachine, m_Keyboard));
 		return;

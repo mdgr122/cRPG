@@ -6,7 +6,7 @@
 class Player : public Actor
 {
 public:
-	Player(const std::wstring& name, const std::wstring& id, Inventory& inventory, int level, int max_hp);
+	Player(const std::wstring& name, const std::wstring& id, Inventory& inventory, int level, int max_hp, int max_mp);
 	~Player();
 
 	Inventory& GetInventory() { return m_Inventory; }

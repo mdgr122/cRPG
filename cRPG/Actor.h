@@ -17,7 +17,7 @@ public:
 
 protected:
 	std::wstring m_sName, m_sID;
-	int m_Level, m_XP, m_XPToNextLevel, m_HP, m_MaxHP;
+	int m_Level, m_XP, m_XPToNextLevel, m_HP, m_MaxHP, m_MP, m_MaxMP;
 
 	bool m_bDead;
 	ActorType m_eActorType;
@@ -35,11 +35,14 @@ private:
 
 public:
 	Actor();
-	Actor(const std::wstring& name, const std::wstring& id, int level, int max_hp, ActorType type = ActorType::WARRIOR); // Default Warrior Type
+	Actor(const std::wstring& name, const std::wstring& id, int level, int max_hp, int max_mp, ActorType type = ActorType::WARRIOR); // Default Warrior Type
 	~Actor() = default;
 
 	inline const int GetHP() const { return m_HP; }
 	inline const int GetMaxHP() const { return m_MaxHP; }
+	inline const int GetMP() const { return m_MP; }
+	inline const int GetMaxMP() const { return m_MaxMP; }
+
 
 	inline const std::vector<std::wstring> GetEquipmentSlotLabels() const { return m_EquipmentSlotLabels; }
 	inline const std::vector<std::wstring> GetStatLabels() const { return m_StatLabels; }
@@ -61,8 +64,14 @@ public:
 	const int GetLevel() const { return m_Level; }
 	const int GetXP() const { return m_XP; }
 	const int GeXPToNextLevel() const { return m_XPToNextLevel; }
+	//const int GetMP() const { return m_MP; }
+	//const int GetMaxMP() const { return m_MaxMP; }
+
 
 	void HealHP(int hp);
+
 	void TakeDamage(int hp);
+
+	bool useMP(int mp);
 
 };

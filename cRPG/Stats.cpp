@@ -121,11 +121,11 @@ void Stats::UpdateStats()
 		(baseDexterity / 5);
 
 	// Update defense power stat
-	int totalArmorDefense = m_EquipSlotList[EquipSlots::HEADGEAR] +
+	int totalArmourDefense = (m_EquipSlotList[EquipSlots::HEADGEAR] +
 		m_EquipSlotList[EquipSlots::CHEST_BODY] +
-		m_EquipSlotList[EquipSlots::FOOTWEAR];
+		m_EquipSlotList[EquipSlots::FOOTWEAR]);
 
-	m_StatList[L"Defense"] = totalArmorDefense +
+	m_StatList[L"Defense"] = totalArmourDefense +
 		(baseStrength / 5) +
 		(baseIntelligence / 5) +
 		(baseSpeed / 5) +

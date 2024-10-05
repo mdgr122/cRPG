@@ -35,7 +35,7 @@ EquipmentMenuState::EquipmentMenuState(Player& player, Console& console, StateMa
 		//SelectorParams{30, 34, 3, 20, 2}
 
 		// Controls both the selector of the item once we enter the the equipslotslector, by hitting space on weapon/headgera/armour/footwear/accessory/etc.
-		SelectorParams{30, 34, 1, 0, 0} // X, Y, COLS, CURR_X, CURR_Y [X of text, Y of text, col of text, x of selector, y of selector]
+		SelectorParams{30, 34, 2, 0, 0} // X, Y, COLS, CURR_X, CURR_Y [X of text, Y of text, col of text, x of selector, y of selector]
 	}
 	, m_bExitGame{false}
 	, m_bInMenuSelect{true}
@@ -47,7 +47,7 @@ EquipmentMenuState::EquipmentMenuState(Player& player, Console& console, StateMa
 	, m_PanelBarX{ m_CenterScreenW - (PANEL_BARS / 2) }
 	, m_DiffPosY{0}
 	, m_PrevStatModPos{0}
-	//, m_PrevIndex{-1}
+	, m_PrevIndex{-1}
 	, m_sCurrentSlot{L"NO_SLOT"}
 	, m_eEquipSlots{Stats::EquipSlots::NO_SLOT}
 
@@ -69,11 +69,13 @@ void EquipmentMenuState::OnEnter()
 
 void EquipmentMenuState::OnExit()
 {
+	m_Console.ClearBuffer();
 }
 
 void EquipmentMenuState::Update()
 {
-	// Nothing to do in this function
+
+	UpdateIndex();
 }
 
 void EquipmentMenuState::Draw()
@@ -342,7 +344,6 @@ void EquipmentMenuState::OnEquipSelect(int index, std::vector<std::shared_ptr<Eq
 	{
 	case Stats::EquipSlots::WEAPON:
 		equipType = Equipment::EquipType::WEAPON;
-		//weapon_type = WeaponProperties::WeaponType::SWORD;
 		break;
 	case Stats::EquipSlots::HEADGEAR:
 		equipType = Equipment::EquipType::ARMOUR;
@@ -566,6 +567,24 @@ void EquipmentMenuState::RemoveEquipment(int index, std::vector<std::wstring>& d
 
 	m_Player.GetEquippedItemSlots()[m_eEquipSlots] = nullptr;
 	m_Console.ClearBuffer();
+}
+
+void EquipmentMenuState::UpdateIndex()
+{
+	auto index = m_EquipmentSelector.GetIndex();
+
+
+
+	//std::cout << "Current Index: " << index << std::endl;
+	//std::cout << "PrevIndex: " << m_PrevIndex << std::endl;
+
+
+	// Clear the description area
+	if (m_PrevIndex != index)
+	{
+		m_PrevIndex = index;
+		m_Console.ClearBuffer();
+	}
 }
 
 //void EquipmentMenuState::FocusOnMenu()

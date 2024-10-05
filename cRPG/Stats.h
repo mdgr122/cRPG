@@ -8,7 +8,7 @@ public:
 	enum class EquipSlots { WEAPON = 0, HEADGEAR, CHEST_BODY, FOOTWEAR, ACCESSORY,  NO_SLOT};
 
 	Stats();
-	Stats(int strength, int intelligence, int speed, int dexteriy, int stamina);
+	Stats(int strength, int intelligence, int speed, int dexterity, int stamina);
 	~Stats() = default;
 
 	inline const std::unordered_map<std::wstring, int>& GetStatList() const { return m_StatList; }

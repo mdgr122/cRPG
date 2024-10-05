@@ -23,7 +23,6 @@ Weapon::Weapon(const std::wstring& name, const std::wstring& description, int bu
 bool Weapon::OnEquip(Player& player)
 {
  	const auto& item_power = GetValue();
-	//auto& player_stats = player.GetStats();
 	auto& player_stats = player.GetStats();
 
 	player_stats.SetEquipmentValue(Stats::EquipSlots::WEAPON, item_power);
@@ -82,21 +81,24 @@ bool Armour::OnEquip(Player& player)
 	const auto& item_power = GetValue();
 	auto& player_stats = player.GetStats();
 
+	//player_stats.SetEquipmentValue(Stats::EquipSlots::, item_power);
+
 	Stats::EquipSlots slot = Stats::EquipSlots::NO_SLOT;
+	
 	switch (m_ArmourProperties.armourType)
 	{
 	case ArmourProperties::ArmourType::HEADGEAR:
 		slot = Stats::EquipSlots::HEADGEAR;
-		return false;;
+		break;
 	case ArmourProperties::ArmourType::CHEST_BODY:
 		slot = Stats::EquipSlots::CHEST_BODY;
-		return false;;
+		break;
 	case ArmourProperties::ArmourType::FOOTWEAR:
 		slot = Stats::EquipSlots::FOOTWEAR;
-		return false;;
+		break;
 	case ArmourProperties::ArmourType::NOT_ARMOUR:
 		slot = Stats::EquipSlots::NO_SLOT;
-		return false;;
+		return false;
 	default:
 		slot = Stats::EquipSlots::NO_SLOT;
 		return false;
@@ -125,16 +127,16 @@ bool Armour::OnRemove(Player& player)
 	{
 	case ArmourProperties::ArmourType::HEADGEAR:
 		slot = Stats::EquipSlots::HEADGEAR;
-		return false;;
+		break;
 	case ArmourProperties::ArmourType::CHEST_BODY:
 		slot = Stats::EquipSlots::CHEST_BODY;
-		return false;;
+		break;
 	case ArmourProperties::ArmourType::FOOTWEAR:
 		slot = Stats::EquipSlots::FOOTWEAR;
-		return false;;
+		break;
 	case ArmourProperties::ArmourType::NOT_ARMOUR:
 		slot = Stats::EquipSlots::NO_SLOT;
-		return false;;
+		return false;
 	default:
 		slot = Stats::EquipSlots::NO_SLOT;
 		return false;

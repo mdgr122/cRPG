@@ -5,6 +5,7 @@
 #include "../Party.h"
 #include "../Inventory.h"
 #include "../utilities/Timer.h"
+#include "../utilities/Typewriter.h"
 #include <memory>
 
 class Console;
@@ -35,4 +36,7 @@ private:
 
 	//std::unique_ptr<Player> m_TestPlayer;
 	//Inventory m_TestInventory;
+
+	// Testing Typewriter
+	TypeWriter m_TypeWriter;
 };

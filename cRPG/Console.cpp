@@ -184,8 +184,11 @@ void Console::Write(int x, int y, const std::wstring& text, WORD color)
 	// if text.size() > 1 or if it's empty, then return bool false; If not, then return character at text[0]
 	auto is_any_of = [&](wchar_t character)
 		{
-			if (text.size() > 1 || text.empty())
+			if (text.size() > 1)
 				return false;
+
+			if (text.empty())
+				return true;
 
 			return character == text[0];
 		};

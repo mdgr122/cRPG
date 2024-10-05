@@ -43,7 +43,7 @@ private:
 	Selector<std::shared_ptr<Equipment>> m_EquipmentSelector;
 
 	bool m_bExitGame, m_bInMenuSelect, m_bInSlotSelect, m_bRemoveEquipment;
-	int m_ScreenWidth, m_ScreenHeight, m_CenterScreenW, m_PanelBarX, m_DiffPosY, m_PrevStatModPos;
+	int m_ScreenWidth, m_ScreenHeight, m_CenterScreenW, m_PanelBarX, m_DiffPosY, m_PrevStatModPos, m_PrevIndex;
 
 	std::wstring m_sCurrentSlot;
 	Stats::EquipSlots m_eEquipSlots;
@@ -61,5 +61,6 @@ private:
 	void RenderEquipSlots(int x, int y, const std::wstring& item);
 
 	void RemoveEquipment(int index, std::vector<std::wstring>& data);
+	void UpdateIndex();
 	//void FocusOnMenu();
 };

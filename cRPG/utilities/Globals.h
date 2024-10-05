@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <string>
+#include <vector>
 #include "Timer.h"
 
 class CRPG_Globals
@@ -14,6 +15,9 @@ public:
 	void Update();
 
 	const std::wstring GetTime(); // Not the same as GetGameTime().
+
+	std::pair<std::wstring, std::wstring> wstr_split_to_wstr(const std::wstring text, size_t  text_pos);
+	std::pair<std::vector<wchar_t>, std::vector<wchar_t>> wstr_split_to_wchar(const std::wstring& text, size_t text_pos);
 
 private:
 	int m_GameTime, m_SavedGameTime;

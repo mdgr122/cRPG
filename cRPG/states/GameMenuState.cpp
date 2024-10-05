@@ -1,6 +1,7 @@
 #include "GameMenuState.h"
 #include "ItemMenuState.h"
 #include "EquipmentMenuState.h"
+#include "StatusMenuState.h"
 #include "../Party.h"
 #include "../Player.h"
 #include "../Console.h"
@@ -211,7 +212,7 @@ void GameMenuState::OnPlayerSelect(int index, std::vector<std::shared_ptr<Player
 		m_StateMachine.PushState(std::make_unique<EquipmentMenuState>(*player, m_Console, m_StateMachine, m_Keyboard));
 		break;
 	case SelectType::STATS:
-		// TODO: Create new Stats State
+		m_StateMachine.PushState(std::make_unique<StatusMenuState>(*player, m_Console, m_StateMachine, m_Keyboard));
 		break;
 	case SelectType::ORDER:
 		// TODO: Create new Order State

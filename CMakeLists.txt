@@ -46,7 +46,9 @@ add_executable(cRPG
     "cRPG/states/ItemMenuState.h" 
     "cRPG/states/ItemMenuState.cpp" 
     "cRPG/states/EquipmentMenuState.h" 
-    "cRPG/states/EquipmentMenuState.cpp" 
+    "cRPG/states/EquipmentMenuState.cpp"
+    "cRPG/states/StatusMenuState.h" 
+    "cRPG/states/StatusMenuState.cpp" 
     "cRPG/Selector.h" 
     "cRPG/Actor.cpp" 
     "cRPG/Actor.h" 
@@ -79,6 +81,8 @@ add_executable(cRPG
     "cRPG/utilities/ItemLoader.cpp" 
     "cRPG/utilities/EquipmentLoader.h" 
     "cRPG/utilities/EquipmentLoader.cpp"
+    "cRPG/utilities/Typewriter.h"
+    "cRPG/utilities/Typewriter.cpp"
 )
 
 # Specify the C++ standard
