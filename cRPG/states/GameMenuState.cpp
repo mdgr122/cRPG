@@ -40,6 +40,8 @@ GameMenuState::GameMenuState(Party& party, Console& console, StateMachine& state
 	, m_ScreenHeight{console.GetScreenHeight()}
 	, m_CenterScreenW{console.GetHalfWidth()}
 	, m_PanelBarX{m_CenterScreenW - (PANEL_BARS / 2)}
+	, m_FirstChoice{-1} // -1 means no choice
+	, m_SecondChoice{-1} // -1 means no choice
 	, m_eSelectType{SelectType::NONE}
 {
 	m_MenuSelector.SetSelectionFunc(std::bind(&GameMenuState::OnMenuSelect, this, _1, _2));
@@ -65,6 +67,7 @@ void GameMenuState::OnExit()
 
 void GameMenuState::Update()
 {
+	UpdatePlayerOrder();
 }
 
 void GameMenuState::Draw()
@@ -97,6 +100,7 @@ void GameMenuState::ProcessInputs()
 			m_PlayerSelector.HideCursor();
 			m_bInMenuSelect = true;
 			m_eSelectType = SelectType::NONE;
+			m_FirstChoice = m_SecondChoice = -1; // resets playpos to -1 
 			m_MenuSelector.ShowCursor();
 			m_Console.ClearBuffer();
 			return;
@@ -216,6 +220,7 @@ void GameMenuState::OnPlayerSelect(int index, std::vector<std::shared_ptr<Player
 		break;
 	case SelectType::ORDER:
 		// TODO: Create new Order State
+		SetOrderPlacement(player->GetPartyPosition());
 		break;
 	default:
 		break;
@@ -225,4 +230,60 @@ void GameMenuState::OnPlayerSelect(int index, std::vector<std::shared_ptr<Player
 void GameMenuState::OnDrawPlayerSelect(int x, int y, std::shared_ptr<Player> player)
 {
 	/* NOTHING TO DO HERE -- JUST A PLACEHOLDER */
+}
+
+void GameMenuState::SetOrderPlacement(int playerPosition)
+{
+	if (m_FirstChoice < 0)
+	{
+		m_FirstChoice = playerPosition;
+	} 
+	else if (m_SecondChoice < 0)
+	{
+		m_SecondChoice = playerPosition;
+	}
+
+}
+
+void GameMenuState::UpdatePlayerOrder()
+{
+	if (m_FirstChoice < 0 && m_SecondChoice < 0)
+		return;
+
+	for (auto& member : m_Party.GetParty())
+	{
+		if (member->GetPartyPosition() == m_FirstChoice)
+		{
+			member->SetPartyPosition(m_SecondChoice);
+		}
+		else if (member->GetPartyPosition() == m_SecondChoice)
+		{
+			member->SetPartyPosition(m_FirstChoice);
+		}
+	}
+
+	// Sort the original data
+	std::sort(m_Party.GetParty().begin(), m_Party.GetParty().end(), [&](std::shared_ptr<Player>& rh, std::shared_ptr<Player>& lh)
+		{
+			return rh->GetPartyPosition() < lh->GetPartyPosition();
+		});
+
+	// Sort the original data
+	std::sort(m_PlayerSelector.GetData().begin(), m_PlayerSelector.GetData().end(), [&](std::shared_ptr<Player>& rh, std::shared_ptr<Player>& lh)
+		{
+			return rh->GetPartyPosition() < lh->GetPartyPosition();
+		});
+
+	// Reset the selections
+	m_FirstChoice = m_SecondChoice = -1;
+
+	// Enter back into menu
+	m_bInMenuSelect = true;
+	m_eSelectType = SelectType::NONE;
+	m_MenuSelector.ShowCursor();
+	m_PlayerSelector.HideCursor();
+	m_Console.ClearBuffer();
+
+
+
 }

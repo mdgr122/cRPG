@@ -72,7 +72,7 @@ public:
 
 
 
-	const std::vector<T>& GetData() { return m_Data; }
+	std::vector<T>& GetData() { return m_Data; }
 	void SetSelectionFunc(std::function<void(int, std::vector<T>)> on_selection) { m_OnSelection = on_selection; }
 	void SetDrawFunc(std::function<void(int, int, T)> on_draw_item) { m_OnDrawItem = on_draw_item; }
 

@@ -83,6 +83,10 @@ add_executable(cRPG
     "cRPG/utilities/EquipmentLoader.cpp"
     "cRPG/utilities/Typewriter.h"
     "cRPG/utilities/Typewriter.cpp"
+    "cRPG/utilities/ShopParameters.h"
+    "cRPG/utilities/ShopLoader.h"
+    "cRPG/utilities/ShopLoader.cpp"
+
 )
 
 # Specify the C++ standard

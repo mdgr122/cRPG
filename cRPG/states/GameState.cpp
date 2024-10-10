@@ -8,6 +8,7 @@
 #include "GameMenuState.h"
 #include "../utilities/ItemLoader.h"
 #include "../utilities/EquipmentLoader.h"
+#include "../utilities/ShopLoader.h"
 #include <cassert>
 
 
@@ -62,10 +63,17 @@ GameState::GameState(Console& console, Keyboard& keyboard, StateMachine& stateMa
 	m_Party->GetInventory().AddEquipment(std::move(chest));
 
 	
-	auto player = std::make_shared<Player>(L"Test Player", L"1", m_Party->GetInventory(), 1, 100, 20);
+	auto Player1 = std::make_shared<Player>(L"Player 1", L"1", m_Party->GetInventory(), 1, 100, 20);
+	auto Player2 = std::make_shared<Player>(L"Player 2", L"2", m_Party->GetInventory(), 1, 100, 20);
+	auto Player3 = std::make_shared<Player>(L"Player 3", L"3", m_Party->GetInventory(), 1, 100, 20);
 	//auto player2 = std::make_shared<Player>(L"Player2", L"2", m_Party->GetInventory(), 1, 100);
-	m_Party->AddMember(std::move(player));
-	//m_Party->AddMember(std::move(player2));
+	m_Party->AddMember(std::move(Player1));
+	m_Party->AddMember(std::move(Player2));
+	m_Party->AddMember(std::move(Player3));
+	
+	ShopLoader shop_loader{};
+	auto shopParameters = shop_loader.CreateShopParametersFromFile("C:/Users/MDaki/source/repos/cRPG/cRPG/Assets/xml_files/ArmourShopDefs_1.xml");
+	assert(shopParameters, &"Failed to create shop params");
 
 }
 

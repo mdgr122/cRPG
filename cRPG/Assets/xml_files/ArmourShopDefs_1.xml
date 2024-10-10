@@ -1,0 +1,17 @@
+<ArmourShop>
+	<ShopParameters>
+		<ShopType>Armour</ShopType>
+		<Inventory>
+			<ShopItem>
+				<Armour>
+					<Name>Leather Cap</Name>
+				</Armour>
+
+				<Armour>
+					<Name>Leather Shirt</Name>
+				</Armour>
+
+			</ShopItem>
+		</Inventory>
+	</ShopParameters>
+</ArmourShop>

@@ -1,5 +1,7 @@
 #include "Timer.h"
 
+using namespace std::chrono;
+
 Timer::Timer()
 	: m_bIsRunning{false}, m_bIsPaused{false}
 {

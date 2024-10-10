@@ -41,6 +41,7 @@ private:
 
 	bool m_bExitGame, m_bInMenuSelect;
 	int m_ScreenWidth, m_ScreenHeight, m_CenterScreenW, m_PanelBarX;
+	int m_FirstChoice, m_SecondChoice;
 
 	enum class SelectType{ ITEM = 0, MAGIC, EQUIPMENT, STATS, ORDER, NONE, };
 	SelectType m_eSelectType; // Used to determine which menu to open
@@ -51,5 +52,7 @@ private:
 	void OnMenuSelect(int index, std::vector<std::wstring> data);
 	void OnPlayerSelect(int index, std::vector<std::shared_ptr<Player>> data);
 	void OnDrawPlayerSelect(int x, int y, std::shared_ptr<Player> player);
+	void SetOrderPlacement(int playerPosition);
+	void UpdatePlayerOrder();
 
 };

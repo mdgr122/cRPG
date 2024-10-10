@@ -1,8 +1,6 @@
 #pragma once
 #include <chrono>
 
-using namespace std::chrono;
-
 class Timer
 {
 public:
@@ -22,7 +20,7 @@ public:
 
 
 private:
-	time_point<steady_clock> m_StartPoint, m_PausedPoint;
+	std::chrono::time_point<std::chrono::steady_clock> m_StartPoint, m_PausedPoint;
 
 	bool m_bIsRunning, m_bIsPaused;
 };
