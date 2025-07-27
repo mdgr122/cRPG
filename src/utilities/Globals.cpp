@@ -1,5 +1,5 @@
-#include "Globals.h"
-#include "crpg_utils.h"
+#include "utilities/Globals.h"
+#include "utilities/crpg_utils.h"
 
 std::unique_ptr<CRPG_Globals> CRPG_Globals::m_pInstance = nullptr;
 

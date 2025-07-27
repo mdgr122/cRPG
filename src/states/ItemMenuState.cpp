@@ -1,9 +1,9 @@
-#include "ItemMenuState.h"
-#include "../Console.h"
-#include "../Player.h"
-#include "StateMachine.h"
-#include "../Keyboard.h"
-#include "../utilities/crpg_utils.h"
+#include "states/ItemMenuState.h"
+#include "Console.h"
+#include "Player.h"
+#include "states/StateMachine.h"
+#include "Keyboard.h"
+#include "utilities/crpg_utils.h"
 
 using namespace std::placeholders;
 

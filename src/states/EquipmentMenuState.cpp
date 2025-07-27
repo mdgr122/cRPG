@@ -1,8 +1,8 @@
-#include "EquipmentMenuState.h"
-#include "../Player.h"
-#include "../Console.h"
-#include "StateMachine.h"
-#include "../Keyboard.h"
+#include "states/EquipmentMenuState.h"
+#include "Player.h"
+#include "Console.h"
+#include "states/StateMachine.h"
+#include "Keyboard.h"
 #include <cassert>
 
 using namespace std::placeholders;

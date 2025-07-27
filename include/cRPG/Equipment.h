@@ -87,8 +87,11 @@ public:
 	
 	inline const std::wstring& GetName() const { return m_sName; }
 	inline const std::wstring& GetDescription() const { return m_sDescription; }
+	inline const int GetBuyPrice() const { return m_BuyPrice; }
+	inline const int GetSellPrice() const { return m_BuyPrice; }
+
 	
-	inline bool Add(int num) 
+	inline bool Add(int num = 1) 
 	{ 
 		if (m_Count + num > MAX_COUNT)
 			return false;
@@ -96,13 +99,30 @@ public:
 		m_Count += num;
 		return true;
 	}
-	
+
+	inline bool Decrement(int num = 1)
+	{
+		if (m_Count <= 0)
+			return false;
+		if (m_Count - num < 0)
+			return false;
+
+		m_Count--;
+
+		if (m_Count < 0)
+			m_Count = 0;
+
+		return true;
+	}
+
 	inline const int GetCount() const { return m_Count; }
+
 
 	inline const Equipment::EquipType GetType() const { return m_eEquipType; }
 	inline const WeaponProperties& GetWeaponProperties() const { return m_WeaponProperties; }
 	inline const ArmourProperties& GetArmourProperties() const { return m_ArmourProperties; }
 	inline const StatModifier& GetStatModifier() const { return m_StatModifier; }
+	inline const int GetMaxCount() const { return MAX_COUNT; }
 
 
 

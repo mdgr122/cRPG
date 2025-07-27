@@ -1,4 +1,4 @@
-#include "crpg_utils.h"
+#include "utilities/crpg_utils.h"
 
 std::wstring CharToWide(const char* str)
 {

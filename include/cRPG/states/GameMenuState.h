@@ -43,7 +43,7 @@ private:
 	int m_ScreenWidth, m_ScreenHeight, m_CenterScreenW, m_PanelBarX;
 	int m_FirstChoice, m_SecondChoice;
 
-	enum class SelectType{ ITEM = 0, MAGIC, EQUIPMENT, STATS, ORDER, NONE, };
+	enum class SelectType{ SHOP = 0, ITEM, MAGIC, EQUIPMENT, STATS, ORDER, NONE, };
 	SelectType m_eSelectType; // Used to determine which menu to open
 
 	void DrawPanels();

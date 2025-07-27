@@ -1,8 +1,8 @@
-#include "Typewriter.h"
-#include "../Logger.h"
-#include "../Console.h"
-#include "../utilities/crpg_utils.h"
-#include "../utilities/Globals.h"
+#include "utilities/Typewriter.h"
+#include "Logger.h"
+#include "Console.h"
+#include "utilities/crpg_utils.h"
+#include "utilities/Globals.h"
 #include <algorithm>
 
 
@@ -141,12 +141,12 @@ bool TypeWriter::SetText(const std::wstring& text)
 		m_sTextChunks.push_back(line_buffer);
 	}
 
-	std::wcout << "\nProcessed Lines:\n";
-	for (const auto& elem : m_sTextChunks)
-	{
-		std::wcout << elem << " ";
-	}
-	std::cout << std::endl;
+	//std::wcout << "\nProcessed Lines:\n";
+	//for (const auto& elem : m_sTextChunks)
+	//{
+	//	std::wcout << elem << " ";
+	//}
+	//std::cout << std::endl;
 
 	if (!SetBorderProperties())
 	{
@@ -169,7 +169,7 @@ void TypeWriter::UpdateText()
 		//std::wcout << "sCurrentText: " << m_sCurrentText << std::endl;
 		if (m_CharIndex >= m_sTextChunks[m_TextIndex].size())
 		{
-			std::wcout << "sCurrentText: " << m_sCurrentText << std::endl;
+			//std::wcout << "sCurrentText: " << m_sCurrentText << std::endl;
 			m_CharIndex = 0;
 			m_TextIndex++;
 			m_Y++;

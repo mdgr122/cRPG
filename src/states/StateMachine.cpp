@@ -1,4 +1,4 @@
-#include "StateMachine.h"
+#include "states/StateMachine.h"
 
 StateMachine::StateMachine() : m_States()
 {

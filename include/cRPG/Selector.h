@@ -68,11 +68,19 @@ public:
 
 	~Selector();
 
-	void SetData(std::vector<T> data) { m_Data = data; }
+	void SetData(std::vector<T> data) 
+	{ 
+		m_Data = data;
 
-
+		// Initialize the number of rows - Uses a Ternary Operator (short if statement, essentially)
+		// Ternary Operator: condition ? expression1 : expression2; If true, execute expression 1, if false execute expression 2 
+		// If params.columns == 0 then return 1, if false then return params.columns
+		// Adding this m_Rows line to the SetData void func reset or re-initializes the number of rows needed for each item in their respective shops.
+		m_Rows = static_cast<int>(std::ceil(m_Data.size() / (m_Params.columns == 0 ? 1 : m_Params.columns)));
+	}
 
 	std::vector<T>& GetData() { return m_Data; }
+
 	void SetSelectionFunc(std::function<void(int, std::vector<T>)> on_selection) { m_OnSelection = on_selection; }
 	void SetDrawFunc(std::function<void(int, int, T)> on_draw_item) { m_OnDrawItem = on_draw_item; }
 
@@ -168,7 +176,7 @@ inline void Selector<T>::ProcessInputs()
 		MoveLeft();
 	else if (m_Keyboard.IsKeyPressed(KEY_RIGHT))
 		MoveRight();
-	else if (m_Keyboard.IsKeyPressed(KEY_SPACE))
+	else if (m_Keyboard.IsKeyPressed(KEY_ENTER))
 		OnAction();
 }
 

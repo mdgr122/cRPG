@@ -1,9 +1,9 @@
-#include "ShopLoader.h"
-#include "../Logger.h"
-#include "../utilities/crpg_utils.h"
-#include "ItemCreator.h"
-#include "EquipmentLoader.h"
-#include "ItemLoader.h"
+#include "utilities/ShopLoader.h"
+#include "Logger.h"
+#include "utilities/crpg_utils.h"
+#include "utilities/EquipmentLoader.h"
+#include "utilities/ItemCreator.h"
+#include "utilities/ItemLoader.h"
 
 using namespace tinyxml2;
 
@@ -13,14 +13,15 @@ ShopLoader::ShopLoader()
 }
 
 ShopLoader::~ShopLoader()
-{
-}
+{}
 
-std::unique_ptr<ShopParameters> ShopLoader::CreateShopParametersFromFile(const std::string& shop_filepath)
+std::unique_ptr<ShopParameters> ShopLoader::CreateShopParametersFromFile(
+	const std::string& shop_filepath )
 {
 	if (LoadFile(shop_filepath) != XMLError::XML_SUCCESS)
 	{
-		CRPG_ERROR("Failed to load shop parameters from [" + shop_filepath + "]");
+		CRPG_ERROR(
+			"Failed to load shop parameters from [" + shop_filepath + "]");
 		return nullptr;
 	}
 
@@ -60,41 +61,42 @@ std::unique_ptr<ShopParameters> ShopLoader::CreateShopParametersFromFile(const s
 
 	// Unique ptr to an inventory
 	std::unique_ptr<Inventory> inventory = std::make_unique<Inventory>();
-	ShopParameters::ShopType shopType = ShopTypeFromString(shopTypeStr);
+	ShopParameters::ShopType   shopType  = ShopTypeFromString(shopTypeStr);
 
 	std::string definitionLocation{ "" };
-	bool itemLoader{ false };
-	bool weaponLoader{ false };
+	bool        itemLoader{ false };
+	bool        weaponLoader{ false };
 
 	switch (shopType)
 	{
-	case ShopParameters::ShopType::WEAPON:
-		definitionLocation = "C:/Users/MDaki/source/repos/cRPG/cRPG/Assets/xml_files/WeaponDefs.xml";
-		weaponLoader = true;
-		break;
-	case ShopParameters::ShopType::ARMOUR:
-		definitionLocation = "C:/Users/MDaki/source/repos/cRPG/cRPG/Assets/xml_files/ArmourDefs.xml";
-		break;
-	case ShopParameters::ShopType::ACCESSORY:
-		break;
-	case ShopParameters::ShopType::ITEM:
-		definitionLocation = "C:/Users/MDaki/source/repos/cRPG/cRPG/Assets/xml_files/ItemDefs.xml";
-		itemLoader = true;
-		break;
-	case ShopParameters::ShopType::NOT_A_SHOP:
-		CRPG_ERROR("ShopType is not a known type")
-		return nullptr;
+		case ShopParameters::ShopType::WEAPON:
+			definitionLocation = "Assets/xml_files/WeaponDefs.xml";
+			weaponLoader = true;
+			break;
+		case ShopParameters::ShopType::ARMOUR:
+			definitionLocation = "Assets/xml_files/ArmourDefs.xml";
+			break;
+		case ShopParameters::ShopType::ACCESSORY:
+			break;
+		case ShopParameters::ShopType::ITEM:
+			definitionLocation = "Assets/xml_files/ItemDefs.xml";
+			itemLoader = true;
+			break;
+		case ShopParameters::ShopType::NOT_A_SHOP: CRPG_ERROR(
+				"ShopType is not a known type")
+			return nullptr;
 	}
-	
+
 	// Create the item loader if item shop
 	std::unique_ptr<ItemLoader> itemLoaderPtr{ nullptr };
-	if (itemLoader)
-		itemLoaderPtr = std::make_unique<ItemLoader>(definitionLocation);
+	if (itemLoader) itemLoaderPtr = std::make_unique<ItemLoader>(
+		definitionLocation);
 
 	// Create the equipment loader if eqiupment shop
 	std::unique_ptr<EquipmentLoader> equipmentLoaderPtr{ nullptr };
-	if (!itemLoader)
-		equipmentLoaderPtr = std::make_unique<EquipmentLoader>(definitionLocation, weaponLoader);
+	if (!itemLoader) equipmentLoaderPtr = std::make_unique<EquipmentLoader>(
+		definitionLocation,
+		weaponLoader);
 
 	// Get the shop items
 	XMLElement* pShopItem = pInventory->FirstChildElement("ShopItem");
@@ -123,20 +125,18 @@ std::unique_ptr<ShopParameters> ShopLoader::CreateShopParametersFromFile(const s
 			return nullptr;
 		}
 		std::string name{ pName->GetText() }; // The name from the shop
-		
+
 		if (itemLoader)
 		{
 			// Load Items - Attempt to get item from item loader
 			auto newItem = itemLoaderPtr->CreateObjectFromFile(name);
 
-			if (newItem)
-				inventory->AddItem(std::move(newItem));
+			if (newItem) inventory->AddItem(std::move(newItem));
 		}
 		else // Load equipment
 		{
 			auto newEquipment = equipmentLoaderPtr->CreateObjectFromFile(name);
-			if (newEquipment)
-				inventory->AddEquipment(std::move(newEquipment));
+			if (newEquipment) inventory->AddEquipment(std::move(newEquipment));
 		}
 
 		// Move to the next shop item
@@ -144,7 +144,8 @@ std::unique_ptr<ShopParameters> ShopLoader::CreateShopParametersFromFile(const s
 	}
 
 	// Create the ShopParameters
-	std::unique_ptr<ShopParameters> shop_parameters = std::make_unique<ShopParameters>(std::move(inventory), shopType);
+	std::unique_ptr<ShopParameters> shop_parameters = std::make_unique<
+		ShopParameters>(std::move(inventory), shopType);
 	if (!shop_parameters)
 	{
 		CRPG_ERROR("Failed to create the shop parameters");
@@ -154,7 +155,8 @@ std::unique_ptr<ShopParameters> ShopLoader::CreateShopParametersFromFile(const s
 	return shop_parameters;
 }
 
-std::shared_ptr<ShopParameters> ShopLoader::CreateObjectFromFile(const std::string& objName)
+std::shared_ptr<ShopParameters> ShopLoader::CreateObjectFromFile(
+	const std::string& objName )
 {
 	return std::shared_ptr<ShopParameters>();
 }

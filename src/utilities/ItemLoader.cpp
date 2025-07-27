@@ -1,8 +1,8 @@
-#include "ItemLoader.h"
-#include "crpg_utils.h"
-#include "ItemCreator.h"
-#include "../Potion.h"
-#include "../Logger.h"
+#include "utilities/ItemLoader.h"
+#include "utilities/crpg_utils.h"
+#include "utilities/ItemCreator.h"
+#include "Potion.h"
+#include "Logger.h"
 #include <cassert>
 
 using namespace tinyxml2;

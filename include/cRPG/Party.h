@@ -12,15 +12,18 @@ public:
 	Party();
 	~Party();
 
-	bool AddMember(std::shared_ptr<Player> newMember);
-	bool RemoveMember(const std::wstring& memberID, bool eliminate = false);
+
 	Inventory& GetInventory() { return m_Inventory; }
 	std::vector<std::shared_ptr<Player>>& GetParty() { return m_PartyMembers; }
+	
+	
 	const int GetGold() const { return m_Gold; }
-	void AddGold(int gold);
-
 	const int getNumActiveMembers() const { return m_NumActiveMembers; }
 
+	void AddGold(int gold);
+
+	bool AddMember(std::shared_ptr<Player> newMember);
+	bool RemoveMember(const std::wstring& memberID, bool eliminate = false);
 	bool BuyItem(int price, std::shared_ptr<Item> item);
 	bool BuyEquipment(int price, std::shared_ptr<Equipment> equipment);
 

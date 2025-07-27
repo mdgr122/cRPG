@@ -1,8 +1,8 @@
-#include "StatusMenuState.h"
-#include "../Player.h"
-#include "../Console.h"
-#include "StateMachine.h"
-#include "../Keyboard.h"
+#include "states/StatusMenuState.h"
+#include "Player.h"
+#include "Console.h"
+#include "states/StateMachine.h"
+#include "Keyboard.h"
 #include <cassert>
 
 StatusMenuState::StatusMenuState(Player& player, Console& console, StateMachine& stateMachine, Keyboard& keyboard)

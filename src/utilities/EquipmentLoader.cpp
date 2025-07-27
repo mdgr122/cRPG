@@ -1,7 +1,7 @@
-#include "EquipmentLoader.h"
-#include "crpg_utils.h"
-#include "ItemCreator.h"
-#include "../Logger.h"
+#include "utilities/EquipmentLoader.h"
+#include "utilities/crpg_utils.h"
+#include "utilities/ItemCreator.h"
+#include "Logger.h"
 #include <cassert>
 
 using namespace tinyxml2;

@@ -11,82 +11,40 @@ endif()
 
 project ("cRPG")
 
-# Add the tinyxml2 library
+# ===================================================================
+# Dependencies
+# ===================================================================
+
+# Add the tinyxml2 library from its source files
 add_library(tinyxml2 STATIC
-    "cRPG/libs/tinyxml2/tinyxml2.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2/tinyxml2.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2//tinyxml2.h"
 )
 
 # Specify the include directories for tinyxml2
 target_include_directories(tinyxml2 PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/cRPG/libs/tinyxml2"
+    "${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2"
 )
 
-# Add source to this project's executable, excluding tinyxml2 sources
-add_executable(cRPG 
-    "cRPG/cRPG.cpp" 
-    "cRPG/cRPG.h" 
-    "cRPG/Game.cpp" 
-    "cRPG/Game.h" 
-    "cRPG/Logger.cpp" 
-    "cRPG/Logger.h" 
-    "cRPG/Colors.h" 
-    "cRPG/Console.cpp" 
-    "cRPG/Console.h" 
-    "cRPG/Button.h" 
-    "cRPG/Keys.h" 
-    "cRPG/Keyboard.cpp" 
-    "cRPG/Keyboard.h" 
-    "cRPG/Button.cpp" 
-    "cRPG/Button.h"
-    "cRPG/states/InterfaceState.h" 
-    "cRPG/states/StateMachine.h" 
-    "cRPG/states/StateMachine.cpp" 
-    "cRPG/states/GameState.h" 
-    "cRPG/states/GameState.cpp" 
-    "cRPG/states/ItemMenuState.h" 
-    "cRPG/states/ItemMenuState.cpp" 
-    "cRPG/states/EquipmentMenuState.h" 
-    "cRPG/states/EquipmentMenuState.cpp"
-    "cRPG/states/StatusMenuState.h" 
-    "cRPG/states/StatusMenuState.cpp" 
-    "cRPG/Selector.h" 
-    "cRPG/Actor.cpp" 
-    "cRPG/Actor.h" 
-    "cRPG/Player.cpp" 
-    "cRPG/Player.h" 
-    "cRPG/Equipment.cpp" 
-    "cRPG/Equipment.h" 
-    "cRPG/Item.h"
-    "cRPG/Inventory.cpp" 
-    "cRPG/Inventory.h" 
-    "cRPG/Stats.cpp" 
-    "cRPG/Stats.h" 
-    "cRPG/Party.cpp" 
-    "cRPG/Party.h" 
-    "cRPG/utilities/crpg_utils.cpp" 
-    "cRPG/utilities/crpg_utils.h" 
-    "cRPG/Potion.cpp" 
-    "cRPG/Potion.h" 
-    "cRPG/utilities/ItemCreator.h" 
-    "cRPG/states/GameMenuState.cpp" 
-    "cRPG/states/GameMenuState.h" 
-    "cRPG/utilities/Timer.cpp" 
-    "cRPG/utilities/Timer.h" 
-    "cRPG/utilities/Globals.cpp" 
-    "cRPG/utilities/Globals.h" 
-    "cRPG/libs/tinyxml2/tinyxml2.h" 
-    "cRPG/libs/tinyxml2/tinyxml2.cpp" 
-    "cRPG/utilities/Parser.h"
-    "cRPG/utilities/ItemLoader.h" 
-    "cRPG/utilities/ItemLoader.cpp" 
-    "cRPG/utilities/EquipmentLoader.h" 
-    "cRPG/utilities/EquipmentLoader.cpp"
-    "cRPG/utilities/Typewriter.h"
-    "cRPG/utilities/Typewriter.cpp"
-    "cRPG/utilities/ShopParameters.h"
-    "cRPG/utilities/ShopLoader.h"
-    "cRPG/utilities/ShopLoader.cpp"
+# ===================================================================
+# Main Executable
+# ===================================================================
 
+# Automatically find all .cpp files inside the cRPG directory,
+# excluding the ones in the libs folder.
+file(GLOB_RECURSE CRPG_SOURCES
+    "cRPG.cpp"
+    "include/cRPG/*.h"
+    "src/*.cpp"
+)
+
+# Add the main executable target using the automatically found sources
+add_executable(cRPG ${CRPG_SOURCES})
+
+# Add the cRPG directory to the include path.
+# This lets you use #include "Game.h" instead of #include "cRPG/Game.h".
+target_include_directories(cRPG PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/cRPG"
 )
 
 # Specify the C++ standard
@@ -98,4 +56,17 @@ target_link_libraries(cRPG PRIVATE tinyxml2)
 # Add NOMINMAX to prevent Windows API from defining min/max macros.
 target_compile_definitions(cRPG PRIVATE NOMINMAX)
 
+
 # TODO: Add tests and install targets if needed.
+# Custom Command for Asset XML files -- Comes after the add_executable
+add_custom_command(
+    TARGET cRPG POST_BUILD
+    # Command to run: CMake's built-in copy tool
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    # Assets Folder
+    "${CMAKE_SOURCE_DIR}/assets"
+    # The destination: an "assets" folder inside the same directory where cRPG.exe is created.
+    "$<TARGET_FILE_DIR:cRPG>/assets"
+    # A message that prints during the build
+    COMMENT "Copying assets folder to build directory..."
+)

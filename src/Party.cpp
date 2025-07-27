@@ -6,7 +6,7 @@
 Party::Party()
 	: m_PartyMembers{}
 	, m_Inventory{}
-	, m_Gold{0}
+	, m_Gold{1000}
 	, m_NumActiveMembers{0}
 {
 }

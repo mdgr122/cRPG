@@ -5,6 +5,7 @@
 #include "../Item.h"
 #include "../Equipment.h"
 #include "../Potion.h"
+#include "../Logger.h"
 
 class ItemCreator
 {
@@ -48,8 +49,10 @@ public:
 			//TODO: return Create<Accessory>(std::forward<Args>(args) ...);
 			return nullptr;
 		case Equipment::EquipType::NO_TYPE:
+			CRPG_ERROR("Equipment::EquipType == NONE");
 			return nullptr;
 		default:
+			CRPG_ERROR("Equipment::EquipType == NONE");
 			return nullptr;
 		}
 	}
