@@ -5,10 +5,9 @@
 class ShopLoader : public Parser<ShopParameters>
 {
 public:
-	ShopLoader();
-	~ShopLoader();
+    ShopLoader();
+    ~ShopLoader() override;
 
-	std::unique_ptr<ShopParameters> CreateShopParametersFromFile(const std::string& shop_filepath);
-	virtual std::shared_ptr<ShopParameters> CreateObjectFromFile(const std::string& objName) override;
-
+    std::unique_ptr<ShopParameters> CreateShopParametersFromFile(const std::string &shop_filepath);
+    std::shared_ptr<ShopParameters> CreateObjectFromFile(const std::string &objName) override;
 };

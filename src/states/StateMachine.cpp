@@ -1,34 +1,33 @@
 #include "states/StateMachine.h"
 
-StateMachine::StateMachine() : m_States()
-{
-}
+StateMachine::StateMachine()
+    : m_States()
+{}
 
 StateMachine::~StateMachine()
-{
-}
+{}
 
 void StateMachine::PushState(StatePtr newState)
 {
-	m_States.push(std::move(newState));
-	m_States.top()->OnEnter();
+    m_States.push(std::move(newState));
+    m_States.top()->OnEnter();
 }
 
 StatePtr StateMachine::PopState()
 {
-	if (m_States.empty())
-		return nullptr;
+    if (m_States.empty())
+        return nullptr;
 
-	auto oldState = std::move(m_States.top());
+    auto oldState = std::move(m_States.top());
 
-	m_States.pop();
+    m_States.pop();
 
-	oldState->OnExit();
-	return oldState;
+    oldState->OnExit();
+    return oldState;
 }
 
-StatePtr& StateMachine::GetCurrentState()
+StatePtr &StateMachine::GetCurrentState()
 {
-	// Returns the top of the stack
-	return m_States.top();
+    // Returns the top of the stack
+    return m_States.top();
 }

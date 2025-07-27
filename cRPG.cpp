@@ -4,13 +4,13 @@
 
 int main()
 {
-	Logger logger;
-	//logger.Log("Testing");
+    Logger logger;
+    //logger.Log("Testing");
 
-	// Creating the Game object called game.
-	Game game;
+    // Creating the Game object called game.
+    Game game;
 
-	// Calling the public member function Run();
-	game.Run();
-	return 0;
+    // Calling the public member function Run();
+    game.Run();
+    return 0;
 }

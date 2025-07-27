@@ -1,72 +1,73 @@
 #include "Keyboard.h"
+
+#include <string>
+
 #include "Logger.h"
 
 Keyboard::Keyboard()
-{
-
-}
+{}
 
 void Keyboard::Update()
 {
-	for (size_t i = 0; i < KEY_LAST; i++)
-	{
-		m_Keys[i].m_bIsPressed = false;
-		m_Keys[i].m_bIsReleased = false;
-	}
+    for (size_t i = 0; i < KEY_LAST; i++)
+    {
+        m_Keys[i].m_bIsPressed  = false;
+        m_Keys[i].m_bIsReleased = false;
+    }
 }
 
 void Keyboard::OnKeyDown(int key)
 {
-	// Check to see if key is defined in virtual key list
-	//if (key >= KEY_LAST)
-	if (key < 0 || key >= KEY_LAST)
-	{
-		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
-		return;
-	}
-	m_Keys[key].Update(true);
+    // Check to see if key is defined in virtual key list
+    //if (key >= KEY_LAST)
+    if (key < 0 || key >= KEY_LAST)
+    {
+        CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
+        return;
+    }
+    m_Keys[key].Update(true);
 }
 
 void Keyboard::OnKeyUp(int key)
 {
-	// Check to see if key is defined in virtual key list
-	if (key < 0 || key >= KEY_LAST)
-	{
-		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
-		return;
-	}
-	m_Keys[key].Update(false);
+    // Check to see if key is defined in virtual key list
+    if (key < 0 || key >= KEY_LAST)
+    {
+        CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
+        return;
+    }
+    m_Keys[key].Update(false);
 }
 
 bool Keyboard::IsKeyHeld(int key) const
 {
-	// Check to see if key is defined in virtual key list
-	if (key < 0 || key >= KEY_LAST)
-	{
-		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
-		return false;
-	}
-	return m_Keys[key].m_bIsDown;
+    // Check to see if key is defined in virtual key list
+    if (key < 0 || key >= KEY_LAST)
+    {
+        CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
+        return false;
+    }
+    return m_Keys[key].m_bIsDown;
 }
 
 bool Keyboard::IsKeyPressed(int key) const
 {
-	// Check to see if key is defined in virtual key list
-	if (key < 0 || key >= KEY_LAST)
-	{
-		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
-		return false;
-	}
-	return m_Keys[key].m_bIsPressed;
+    // Check to see if key is defined in virtual key list
+    if (key < 0 || key >= KEY_LAST)
+    {
+        CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
+        return false;
+    }
+    return m_Keys[key].m_bIsPressed;
 }
 
 bool Keyboard::IsKeyReleased(int key) const
 {
-	// Check to see if key is defined in virtual key list
-	if (key < 0 || key >= KEY_LAST)
-	{
-		CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
-		return false;
-	}
-	return m_Keys[key].m_bIsReleased;
+    // Check to see if key is defined in virtual key list
+    if (key < 0 || key >= KEY_LAST)
+    {
+        CRPG_ERROR("[" + std::to_string(key) + "] - Is not defined!");
+        return false;
+    }
+    return m_Keys[key].m_bIsReleased;
 }

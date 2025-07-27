@@ -1,77 +1,83 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <unordered_map>
 #include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
-#include "Stats.h"
 #include "Equipment.h"
+#include "Stats.h"
 
 class Actor
 {
 public:
-	enum class ActorType
-	{
-		WARRIOR = 0, MAGE, THIEF,
-	};
+    enum class ActorType
+    {
+        WARRIOR = 0, MAGE, THIEF,
+    };
 
 protected:
-	std::wstring m_sName, m_sID;
-	int m_Level, m_XP, m_XPToNextLevel, m_HP, m_MaxHP, m_MP, m_MaxMP;
+    std::wstring m_sName, m_sID;
+    int m_Level, m_XP, m_XPToNextLevel, m_HP, m_MaxHP, m_MP, m_MaxMP;
 
-	bool m_bDead;
-	ActorType m_eActorType;
+    bool m_bDead;
+    ActorType m_eActorType;
 
-	//std::unordered_map<Equipment::EquipType, std::shared_ptr<Equipment>> m_mapEquipment;
-	std::unordered_map<Stats::EquipSlots, std::shared_ptr<Equipment>> m_mapEquipmentSlots;
-	Stats m_Stats;
+    //std::unordered_map<Equipment::EquipType, std::shared_ptr<Equipment>> m_mapEquipment;
+    std::unordered_map<Stats::EquipSlots, std::shared_ptr<Equipment>> m_mapEquipmentSlots;
+    Stats m_Stats;
 
 private:
-	// Things that aren't going to change and won't be accessed
-	const std::vector<std::wstring> m_EquipmentSlotLabels{L"Weapon", L"Armour", L"Headgear", L"Footwear", L"Accessory"};
-	const std::vector<std::wstring> m_StatLabels{ L"Attack", L"Strength", L"Intelligence", L"Speed", L"Dexterity", L"Stamina" };
+    // Things that aren't going to change and won't be accessed
+    const std::vector<std::wstring> m_EquipmentSlotLabels{L"Weapon", L"Armour", L"Headgear", L"Footwear", L"Accessory"};
+    const std::vector<std::wstring> m_StatLabels{L"Attack", L"Strength", L"Intelligence", L"Speed", L"Dexterity", L"Stamina"};
 
-	// TODO: std::vector<std::wstring> m_StatLabels; 
+    // TODO: std::vector<std::wstring> m_StatLabels; 
 
 public:
-	Actor();
-	Actor(const std::wstring& name, const std::wstring& id, int level, int max_hp, int max_mp, ActorType type = ActorType::WARRIOR); // Default Warrior Type
-	~Actor() = default;
+    Actor();
+    Actor(const std::wstring &name, const std::wstring &id, int level, int max_hp, int max_mp, ActorType type = ActorType::WARRIOR); // Default Warrior Type
+    ~Actor() = default;
 
-	inline const int GetHP() const { return m_HP; }
-	inline const int GetMaxHP() const { return m_MaxHP; }
-	inline const int GetMP() const { return m_MP; }
-	inline const int GetMaxMP() const { return m_MaxMP; }
-
-
-	inline const std::vector<std::wstring> GetEquipmentSlotLabels() const { return m_EquipmentSlotLabels; }
-	inline const std::vector<std::wstring> GetStatLabels() const { return m_StatLabels; }
-
-	// We want to use the equipment by polymorphism, so we're passing in a ptr to equipment that contains the child classes
-	//std::unordered_map<Equipment::EquipType, std::shared_ptr<Equipment>> GetEquippedItems() { return m_mapEquipment; }
-	std::unordered_map<Stats::EquipSlots, std::shared_ptr<Equipment>>& GetEquippedItemSlots() { return m_mapEquipmentSlots; }
+    inline const int GetHP() const { return m_HP; }
+    inline const int GetMaxHP() const { return m_MaxHP; }
+    inline const int GetMP() const { return m_MP; }
+    inline const int GetMaxMP() const { return m_MaxMP; }
 
 
-	Stats& GetStats() { return m_Stats; }
+    inline const std::vector<std::wstring> GetEquipmentSlotLabels() const
+    {
+        return m_EquipmentSlotLabels;
+    }
+
+    inline const std::vector<std::wstring> GetStatLabels() const
+    {
+        return m_StatLabels;
+    }
+
+    // We want to use the equipment by polymorphism, so we're passing in a ptr to equipment that contains the child classes
+    //std::unordered_map<Equipment::EquipType, std::shared_ptr<Equipment>> GetEquippedItems() { return m_mapEquipment; }
+    std::unordered_map<Stats::EquipSlots, std::shared_ptr<Equipment>> &
+    GetEquippedItemSlots() { return m_mapEquipmentSlots; }
 
 
-
-	inline const bool IsDead() const { return m_bDead; }
-	inline const std::wstring& GetName() const { return m_sName; }
-	inline const std::wstring& GetID() const { return m_sID; }
-
-	
-	const int GetLevel() const { return m_Level; }
-	const int GetXP() const { return m_XP; }
-	const int GeXPToNextLevel() const { return m_XPToNextLevel; }
-	//const int GetMP() const { return m_MP; }
-	//const int GetMaxMP() const { return m_MaxMP; }
+    Stats &GetStats() { return m_Stats; }
 
 
-	void HealHP(int hp);
+    inline const bool IsDead() const { return m_bDead; }
+    inline const std::wstring &GetName() const { return m_sName; }
+    inline const std::wstring &GetID() const { return m_sID; }
 
-	void TakeDamage(int hp);
 
-	bool useMP(int mp);
+    const int GetLevel() const { return m_Level; }
+    const int GetXP() const { return m_XP; }
+    const int GeXPToNextLevel() const { return m_XPToNextLevel; }
+    //const int GetMP() const { return m_MP; }
+    //const int GetMaxMP() const { return m_MaxMP; }
 
+
+    void HealHP(int hp);
+
+    void TakeDamage(int hp);
+
+    bool useMP(int mp);
 };

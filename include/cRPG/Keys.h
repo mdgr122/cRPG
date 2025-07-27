@@ -2,9 +2,9 @@
 
 // WIN API VIRTUAL KEYS
 constexpr int KEY_BACKSPACE = 0x08;
-constexpr int KEY_ENTER = 0x0D;
-constexpr int KEY_ESCAPE = 0x1B;
-constexpr int KEY_SPACE = 0x20;
+constexpr int KEY_ENTER     = 0x0D;
+constexpr int KEY_ESCAPE    = 0x1B;
+constexpr int KEY_SPACE     = 0x20;
 
 
 // Numbers
@@ -60,28 +60,28 @@ constexpr int KEY_NUM_8 = 0x68;
 constexpr int KEY_NUM_9 = 0x69;
 
 // Functional Keys
-constexpr int KEY_F1 = 0x70;
-constexpr int KEY_F2 = 0x71;
-constexpr int KEY_F3 = 0x72;
-constexpr int KEY_F4 = 0x73;
-constexpr int KEY_F5 = 0x74;
-constexpr int KEY_F6 = 0x75;
-constexpr int KEY_F7 = 0x76;
-constexpr int KEY_F8 = 0x77;
-constexpr int KEY_F9 = 0x78;
+constexpr int KEY_F1  = 0x70;
+constexpr int KEY_F2  = 0x71;
+constexpr int KEY_F3  = 0x72;
+constexpr int KEY_F4  = 0x73;
+constexpr int KEY_F5  = 0x74;
+constexpr int KEY_F6  = 0x75;
+constexpr int KEY_F7  = 0x76;
+constexpr int KEY_F8  = 0x77;
+constexpr int KEY_F9  = 0x78;
 constexpr int KEY_F10 = 0x79;
 constexpr int KEY_F11 = 0x7A;
 constexpr int KEY_F12 = 0x7B;
 
-constexpr int KEY_LSHIFT = 0xA0;
-constexpr int KEY_RSHIFT = 0xA1;
+constexpr int KEY_LSHIFT   = 0xA0;
+constexpr int KEY_RSHIFT   = 0xA1;
 constexpr int KEY_LCONTROL = 0xA2;
 constexpr int KEY_RCONTROL = 0xA3;
 
 constexpr int KEY_LAST = 0xFF;
 
 // Arrow Keys
-constexpr int KEY_UP = 0x26;
-constexpr int KEY_DOWN = 0x28;
-constexpr int KEY_LEFT = 0x25;
+constexpr int KEY_UP    = 0x26;
+constexpr int KEY_DOWN  = 0x28;
+constexpr int KEY_LEFT  = 0x25;
 constexpr int KEY_RIGHT = 0x27;

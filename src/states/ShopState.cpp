@@ -1,78 +1,68 @@
 #include "states/ShopState.h"
-#include "states/StateMachine.h"
+#include <cassert>
 #include "Console.h"
-#include "Party.h"
-#include "Keyboard.h"
 #include "Equipment.h"
 #include "Item.h"
-#include "utilities/crpg_utils.h"
+#include "Keyboard.h"
+#include "Party.h"
+#include "states/StateMachine.h"
+#include "utilities/ItemCreator.h"
 #include "utilities/ShopLoader.h"
 #include "utilities/ShopParameters.h"
-#include "utilities/EquipmentLoader.h"
-#include "utilities/ItemCreator.h"
-#include <cassert>
+#include "utilities/crpg_utils.h"
 
 using namespace std::placeholders;
 
-ShopState::ShopState(Party& party, Console& console, StateMachine& stateMachine, Keyboard& keyboard, const std::string& shopFilepath)
-    : m_Party(party), m_Console(console), m_StateMachine(stateMachine), m_Keyboard(keyboard)
+ShopState::ShopState(Party &party, Console &console, StateMachine &stateMachine, Keyboard &keyboard, const std::string &shopFilepath)
+    : m_Console(console)
+    , m_StateMachine(stateMachine)
+    , m_Keyboard(keyboard)
+    , m_Party(party)
     , m_pShopParameters{nullptr}
-    , m_ShopChoiceSelector{
-        console, keyboard, {L"BUY", L"SELL", L"EXIT"},
-        SelectorParams{42, 10, 3}
-    }
-    , m_BuySellSelector{
-        console, keyboard, {L"OK", L"CANCEL"},
-        SelectorParams{80, 30, 2, 0, 0, 10}
-    }
-    , m_EquipmentSelector{
-        console, keyboard, std::vector<std::shared_ptr<Equipment>>(),
-        SelectorParams{30, 18, 1}
-    }
-    , m_ItemSelector{
-        console, keyboard, std::vector<std::shared_ptr<Item>>(),
-        SelectorParams{30, 18, 1} 
-    }
-    , m_Quantity{ 0 }
-    , m_Price{ 0 }
-    , m_ScreenWidth{ console.GetScreenWidth() }
-    , m_ScreenHeight{ console.GetScreenHeight() }
-    , m_CenterScreenW{ console.GetHalfWidth() }
-    , m_PanelBarX{ m_CenterScreenW - (PANEL_BARS / 2) }
-    , m_bInShopSelect{ true }
-    , m_bInItemBuy{ false }
-    , m_bInItemSell{ false }
-    , m_bSetFuncs{ false }
-    , m_bIsEquipmentShop{ false }
-    , m_bBuySellItem{ false }
-    , m_bExitShop{ false }
+    , m_ShopChoiceSelector{console, keyboard, {L"BUY", L"SELL", L"EXIT"}, SelectorParams{42, 10, 3}}
+    , m_BuySellSelector{console, keyboard, {L"OK", L"CANCEL"}, SelectorParams{80, 30, 2, 0, 0, 10}}
+    , m_EquipmentSelector{console, keyboard, std::vector<std::shared_ptr<Equipment>>(), SelectorParams{30, 18, 1}}
+    , m_ItemSelector{console, keyboard, std::vector<std::shared_ptr<Item>>(), SelectorParams{30, 18, 1}}
+    , m_Quantity{0}
+    , m_Price{0}
+    , m_ScreenWidth{console.GetScreenWidth()}
+    , m_ScreenHeight{console.GetScreenHeight()}
+    , m_CenterScreenW{console.GetHalfWidth()}
+    , m_PanelBarX{m_CenterScreenW - (PANEL_BARS / 2)}
     , m_AvailableSellQuantity{0}
+    , m_bInShopSelect{true}
+    , m_bInItemBuy{false}
+    , m_bInItemSell{false}
+    , m_bSetFuncs{false}
+    , m_bIsEquipmentShop{false}
+    , m_bExitShop{false}
+    , m_bBuySellItem{false}
 {
-    ShopLoader shopLoader{};
+    ShopLoader shopLoader{ };
     m_pShopParameters = std::move(shopLoader.CreateShopParametersFromFile(shopFilepath));
-    
+
     // Checking to see if shop parameters are created
     if (!m_pShopParameters)
-    { 
+    {
         CRPG_LOG("Failed to load shop parameters from [" + shopFilepath + "]");
         m_bExitShop = true;
     }
 
     switch (m_pShopParameters->shopType)
     {
-    case ShopParameters::ShopType::WEAPON:
-    case ShopParameters::ShopType::ARMOUR:
-    case ShopParameters::ShopType::ACCESSORY:
-        m_EquipmentSelector.SetData(m_pShopParameters->inventory->GetEquipment());
-        m_bIsEquipmentShop = true;
-        break;
-    case ShopParameters::ShopType::ITEM:
-        m_ItemSelector.SetData(m_pShopParameters->inventory->GetItems());
-        m_bIsEquipmentShop = false;
-        break;
-    case ShopParameters::ShopType::NOT_A_SHOP:
-        //assert(false, &"Shop type must be set for the shop state");
-        break;
+        case ShopParameters::ShopType::WEAPON:
+        case ShopParameters::ShopType::ARMOUR:
+        case ShopParameters::ShopType::ACCESSORY:
+            m_EquipmentSelector.SetData(m_pShopParameters->inventory->GetEquipment());
+            m_bIsEquipmentShop = true;
+            break;
+        case ShopParameters::ShopType::ITEM:
+            m_ItemSelector.SetData(m_pShopParameters->inventory->GetItems());
+            m_bIsEquipmentShop = false;
+            break;
+        case ShopParameters::ShopType::NOT_A_SHOP:
+            //assert(false, &"Shop type must be set for the shop state");
+            break;
     }
 
     // Because these are wstrings, we don't have to set a draw function because wstring has a default draw function, but we have to set the selection for the index still
@@ -80,14 +70,11 @@ ShopState::ShopState(Party& party, Console& console, StateMachine& stateMachine,
     m_BuySellSelector.SetSelectionFunc(std::bind(&ShopState::BuySellOptions, this, _1, _2));
 
     m_BuySellSelector.HideCursor();
-
 }
-
 
 
 ShopState::~ShopState()
-{
-}
+{}
 
 void ShopState::OnEnter()
 {
@@ -101,7 +88,7 @@ void ShopState::OnExit()
 
 void ShopState::Update()
 {
-    if (m_bExitShop) 
+    if (m_bExitShop)
     {
         m_StateMachine.PopState();
         return;
@@ -111,10 +98,10 @@ void ShopState::Update()
     {
         if (m_bInItemBuy)
             UpdateBuyQuantity(m_Price);
-        else if (m_bInItemSell)
-            UpdateSellQuantity(m_AvailableSellQuantity);
+        else
+            if (m_bInItemSell)
+                UpdateSellQuantity(m_AvailableSellQuantity);
     }
-    
 }
 
 void ShopState::Draw()
@@ -129,9 +116,8 @@ void ShopState::Draw()
             m_EquipmentSelector.Draw();
         else
             m_ItemSelector.Draw();
-        
+
         DrawItemsBox();
-    
     }
 
     if (m_bBuySellItem)
@@ -145,7 +131,6 @@ void ShopState::Draw()
 
 void ShopState::ProcessInputs()
 {
-
     if (m_bInShopSelect)
     {
         if (m_Keyboard.IsKeyPressed(KEY_BACKSPACE))
@@ -168,7 +153,6 @@ void ShopState::ProcessInputs()
                 m_EquipmentSelector.SetSelectionFunc(std::bind(&ShopState::OnBuyEquipmentSelect, this, _1, _2));
                 m_EquipmentSelector.SetDrawFunc(std::bind(&ShopState::RenderBuyEquipment, this, _1, _2, _3));
                 m_EquipmentSelector.SetData(m_pShopParameters->inventory->GetEquipment());
-
             }
             else
             {
@@ -190,7 +174,7 @@ void ShopState::ProcessInputs()
     {
         // Items sell, so we're not looking at party inventory
 
-                // Check if buy sell functions have been set - If false, then set them.
+        // Check if buy sell functions have been set - If false, then set them.
         if (!m_bSetFuncs)
         {
             if (m_bIsEquipmentShop)
@@ -199,7 +183,6 @@ void ShopState::ProcessInputs()
                 m_EquipmentSelector.SetSelectionFunc(std::bind(&ShopState::OnSellEquipmentSelect, this, _1, _2));
                 m_EquipmentSelector.SetDrawFunc(std::bind(&ShopState::RenderSellEquipment, this, _1, _2, _3));
                 m_EquipmentSelector.SetData(m_Party.GetInventory().GetEquipment());
-
             }
             else
             {
@@ -231,7 +214,6 @@ void ShopState::ProcessInputs()
     {
         m_BuySellSelector.ProcessInputs();
     }
-
 }
 
 bool ShopState::Exit()
@@ -295,14 +277,13 @@ void ShopState::DrawBuyItems()
 
     // Draw the box -- X, Y, SIZE_T, COLOUR (UP/DOWN, LEFT/RIGHT, SIZE_T, COLOR)
     m_Console.DrawPanelHorz(75, 23, 26, LIGHT_YELLOW); // TOP
-    m_Console.DrawPanelVert(75, 24, 9, LIGHT_YELLOW); // LEFT
+    m_Console.DrawPanelVert(75, 24, 9, LIGHT_YELLOW);  // LEFT
     m_Console.DrawPanelVert(100, 24, 9, LIGHT_YELLOW); // RIGHT
     m_Console.DrawPanelHorz(75, 32, 26, LIGHT_YELLOW); // BOTTOM
 }
 
 void ShopState::DrawSellItems()
-{
-}
+{}
 
 void ShopState::DrawItemsBox()
 {
@@ -317,17 +298,17 @@ void ShopState::DrawItemsBox()
     m_Console.DrawPanelVert(25, 15, 27, BLUE);
     m_Console.DrawPanelHorz(25, 42, 41, BLUE);
 
-    const auto& goldStr = std::to_wstring(m_Party.GetGold());
+    const auto &goldStr = std::to_wstring(m_Party.GetGold());
     m_Console.Write(80, 15, L"GOLD: " + goldStr);
 }
 
 void ShopState::ResetSelections()
 {
     // Resetting everything back to original faluse
-    m_bInItemBuy = false;
-    m_bInItemSell = false;
-    m_bSetFuncs = false;
-    m_bBuySellItem = false;
+    m_bInItemBuy    = false;
+    m_bInItemSell   = false;
+    m_bSetFuncs     = false;
+    m_bBuySellItem  = false;
     m_bInShopSelect = true;
 
     m_ItemSelector.HideCursor();
@@ -338,8 +319,8 @@ void ShopState::ResetSelections()
 
 void ShopState::BuyEquipment()
 {
-    int itemIndex = m_EquipmentSelector.GetIndex();
-    const auto& item = m_EquipmentSelector.GetData()[itemIndex];
+    int itemIndex    = m_EquipmentSelector.GetIndex();
+    const auto &item = m_EquipmentSelector.GetData()[itemIndex];
 
     // Get item count
     if (item->GetCount() + m_Quantity - 1 > item->GetMaxCount())
@@ -347,16 +328,8 @@ void ShopState::BuyEquipment()
 
 
     // Create new item and add to inventory
-    auto newItem = ItemCreator::CreateEquipment(
-        item->GetType(),
-        item->GetWeaponProperties(),
-        item->GetArmourProperties(),
-        item->GetStatModifier(),
-        item->GetName(),
-        item->GetDescription(),
-        item->GetBuyPrice(),
-        item->GetSellPrice()
-    );
+    auto newItem = ItemCreator::CreateEquipment(item->GetType(), item->GetWeaponProperties(), item->GetArmourProperties(), item->GetStatModifier(), item->GetName(),
+                                                item->GetDescription(), item->GetBuyPrice(), item->GetSellPrice());
     assert(newItem && "Failed to create new item");
 
     if (!newItem)
@@ -367,9 +340,9 @@ void ShopState::BuyEquipment()
 
     // Get ref to inventory so we can add it
     newItem->Add(m_Quantity - 1);
-    auto& inventory = m_Party.GetInventory();
+    auto &inventory = m_Party.GetInventory();
 
-    for (const auto& it : inventory.GetEquipment())
+    for (const auto &it : inventory.GetEquipment())
     {
         // Loop trhough equipment and check if we're at max count
         if (newItem->GetName() != it->GetName())
@@ -391,9 +364,9 @@ void ShopState::BuyEquipment()
 
 void ShopState::SellEquipment()
 {
-    int itemIndex = m_EquipmentSelector.GetIndex();
-    const auto& item = m_EquipmentSelector.GetData()[itemIndex];
-    const auto& count = item->GetCount();
+    int itemIndex     = m_EquipmentSelector.GetIndex();
+    const auto &item  = m_EquipmentSelector.GetData()[itemIndex];
+    const auto &count = item->GetCount();
 
     auto totalSellPrice = item->GetSellPrice() * m_Quantity;
     m_Party.AddGold(totalSellPrice);
@@ -412,28 +385,24 @@ void ShopState::SellEquipment()
 
 void ShopState::BuyItems()
 {
-    int itemIndex = m_ItemSelector.GetIndex();
-    const auto& item = m_ItemSelector.GetData()[itemIndex];
+    int itemIndex    = m_ItemSelector.GetIndex();
+    const auto &item = m_ItemSelector.GetData()[itemIndex];
 
     // Get item count
     if (item->GetCount() + m_Quantity - 1 > item->GetMaxCount())
         return;
 
     // Create new item and add to inventory
-    auto newItem = ItemCreator::CreateItem(
-        item->GetType(),
-        item->GetItemName(),
-        item->GetItemDescription(),
-        item->GetItemValue(), // health, etc
-        item->GetBuyPrice()
-    );
+    auto newItem = ItemCreator::CreateItem(item->GetType(), item->GetItemName(), item->GetItemDescription(), item->GetItemValue(),
+                                           // health, etc
+                                           item->GetBuyPrice());
 
 
     // Get ref to inventory so we can add it
     newItem->AddItem(m_Quantity - 1);
-    auto& inventory = m_Party.GetInventory();
+    auto &inventory = m_Party.GetInventory();
 
-    for (const auto& it : inventory.GetItems())
+    for (const auto &it : inventory.GetItems())
     {
         // Loop through equipment and check if we're at max count
         if (newItem->GetItemName() != it->GetItemName())
@@ -455,9 +424,9 @@ void ShopState::BuyItems()
 
 void ShopState::SellItems()
 {
-    int itemIndex = m_ItemSelector.GetIndex();
-    const auto& item = m_ItemSelector.GetData()[itemIndex];
-    const auto& count = item->GetCount();
+    int itemIndex     = m_ItemSelector.GetIndex();
+    const auto &item  = m_ItemSelector.GetData()[itemIndex];
+    const auto &count = item->GetCount();
 
     auto totalSellPrice = item->GetSellPrice() * m_Quantity;
     m_Party.AddGold(totalSellPrice);
@@ -487,17 +456,17 @@ void ShopState::OnShopMenuSelect(int index, std::vector<std::wstring> data)
 
     switch (index)
     {
-    case 0: // BUY 
-        m_bInItemBuy = true;
-        break;
-    case 1: // SELL
-        m_bInItemSell = true;
-        break;
-    case 3: // EXIT
-        m_bExitShop = true;
-        break;
-    default:
-        return;
+        case 0: // BUY 
+            m_bInItemBuy = true;
+            break;
+        case 1: // SELL
+            m_bInItemSell = true;
+            break;
+        case 3: // EXIT
+            m_bExitShop = true;
+            break;
+        default:
+            return;
     }
 
     m_bInShopSelect = false;
@@ -516,8 +485,8 @@ void ShopState::BuySellOptions(int index, std::vector<std::wstring> data)
     {
         m_bBuySellItem = false;
         m_BuySellSelector.HideCursor();
-        m_Quantity = 0;
-        m_Price = 0;
+        m_Quantity              = 0;
+        m_Price                 = 0;
         m_AvailableSellQuantity = 0;
         m_Console.ClearBuffer();
         return;
@@ -542,12 +511,11 @@ void ShopState::BuySellOptions(int index, std::vector<std::wstring> data)
     }
     m_bBuySellItem = false;
     m_BuySellSelector.HideCursor();
-    m_Quantity = 0;
-    m_Price = 0;
+    m_Quantity              = 0;
+    m_Price                 = 0;
     m_AvailableSellQuantity = 0;
     m_Console.ClearBuffer();
     return;
-
 }
 
 void ShopState::OnBuyItemSelect(int index, std::vector<std::shared_ptr<Item>> data)
@@ -555,9 +523,9 @@ void ShopState::OnBuyItemSelect(int index, std::vector<std::shared_ptr<Item>> da
     if (index > data.size() - 1 || data.empty())
         return;
 
-    const auto& item = data[index];
-    const auto& price = item->GetBuyPrice();
-    m_bBuySellItem = true;
+    const auto &item  = data[index];
+    const auto &price = item->GetBuyPrice();
+    m_bBuySellItem    = true;
     m_BuySellSelector.ShowCursor();
     m_Price = price;
 }
@@ -567,9 +535,9 @@ void ShopState::OnBuyEquipmentSelect(int index, std::vector<std::shared_ptr<Equi
     if (index > data.size() - 1 || data.empty())
         return;
 
-    const auto& item = data[index];
-    const auto& price = item->GetBuyPrice();
-    m_bBuySellItem = true;
+    const auto &item  = data[index];
+    const auto &price = item->GetBuyPrice();
+    m_bBuySellItem    = true;
     m_BuySellSelector.ShowCursor();
     m_Price = price;
 }
@@ -579,11 +547,11 @@ void ShopState::OnSellItemSelect(int index, std::vector<std::shared_ptr<Item>> d
     if (index > data.size() - 1 || data.empty())
         return;
 
-    const auto& item = data[index];
-    const auto& price = item->GetSellPrice();
-    m_bBuySellItem = true;
+    const auto &item  = data[index];
+    const auto &price = item->GetSellPrice();
+    m_bBuySellItem    = true;
     m_BuySellSelector.ShowCursor();
-    m_Price = price;
+    m_Price                 = price;
     m_AvailableSellQuantity = item->GetCount();
 }
 
@@ -592,19 +560,18 @@ void ShopState::OnSellEquipmentSelect(int index, std::vector<std::shared_ptr<Equ
     if (index > data.size() - 1 || data.empty())
         return;
 
-    const auto& item = data[index];
-    const auto& price = item->GetSellPrice();
-    m_bBuySellItem = true;
+    const auto &item  = data[index];
+    const auto &price = item->GetSellPrice();
+    m_bBuySellItem    = true;
     m_BuySellSelector.ShowCursor();
-    m_Price = price;
+    m_Price                 = price;
     m_AvailableSellQuantity = item->GetCount();
-
 }
 
 void ShopState::RenderBuyItems(int x, int y, std::shared_ptr<Item> item)
 {
-    const std::wstring& name = item->GetItemName();
-    const std::wstring& price = std::to_wstring(item->GetBuyPrice());
+    const std::wstring &name  = item->GetItemName();
+    const std::wstring &price = std::to_wstring(item->GetBuyPrice());
 
     m_Console.Write(x, y, name);
     m_Console.Write(x + 25, y, price);
@@ -612,8 +579,8 @@ void ShopState::RenderBuyItems(int x, int y, std::shared_ptr<Item> item)
 
 void ShopState::RenderSellItems(int x, int y, std::shared_ptr<Item> item)
 {
-    const std::wstring& name = item->GetItemName();
-    const std::wstring& price = std::to_wstring(item->GetSellPrice());
+    const std::wstring &name  = item->GetItemName();
+    const std::wstring &price = std::to_wstring(item->GetSellPrice());
 
     m_Console.Write(x, y, name);
     m_Console.Write(x + 25, y, price);
@@ -621,8 +588,8 @@ void ShopState::RenderSellItems(int x, int y, std::shared_ptr<Item> item)
 
 void ShopState::RenderBuyEquipment(int x, int y, std::shared_ptr<Equipment> item)
 {
-    const std::wstring& name = item->GetName();
-    const std::wstring& price = std::to_wstring(item->GetBuyPrice());
+    const std::wstring &name  = item->GetName();
+    const std::wstring &price = std::to_wstring(item->GetBuyPrice());
 
     m_Console.Write(x, y, name);
     m_Console.Write(x + 25, y, price);
@@ -630,9 +597,8 @@ void ShopState::RenderBuyEquipment(int x, int y, std::shared_ptr<Equipment> item
 
 void ShopState::RenderSellEquipment(int x, int y, std::shared_ptr<Equipment> item)
 {
-
-    const std::wstring& name = item->GetName();
-    const std::wstring& price = std::to_wstring(item->GetBuyPrice());
+    const std::wstring &name  = item->GetName();
+    const std::wstring &price = std::to_wstring(item->GetBuyPrice());
 
     m_Console.Write(x, y, name);
     m_Console.Write(x + 25, y, price);
@@ -640,9 +606,9 @@ void ShopState::RenderSellEquipment(int x, int y, std::shared_ptr<Equipment> ite
 
 void ShopState::UpdateBuyQuantity(int price)
 {
-    const auto& gold = m_Party.GetGold();
+    const auto &gold = m_Party.GetGold();
 
-    
+
     if (m_Keyboard.IsKeyPressed(KEY_W) && gold >= (m_Quantity + 1) * price)
     {
         m_Quantity++;
@@ -654,15 +620,14 @@ void ShopState::UpdateBuyQuantity(int price)
     }
     else
     {
-        CRPG_LOG("Else Reached in UpdateBuyQuantity!"); 
-        CRPG_LOG("Gold: " + std::to_string(gold) + " -- m_Quantity*price: " + std::to_string(m_Quantity * price));
+        //CRPG_LOG("Else Reached in UpdateBuyQuantity!");
+        //CRPG_LOG("Gold: " + std::to_string(gold) + " -- m_Quantity*price: " + std:: to_string(m_Quantity * price));
     }
-
 }
 
 void ShopState::UpdateSellQuantity(int totalAvailable)
 {
-    const auto& gold = m_Party.GetGold();
+    const auto &gold = m_Party.GetGold();
     if (m_Keyboard.IsKeyPressed(KEY_W) && m_Quantity < totalAvailable)
     {
         m_Quantity++;

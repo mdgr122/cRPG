@@ -1,15 +1,16 @@
 #pragma once
-#include "../Item.h"
 #include "Parser.h"
+#include "../Item.h"
 
 class ItemLoader : public Parser<Item>
 {
 public:
-	ItemLoader(const std::string& filepath);
-	~ItemLoader();
+    ItemLoader(const std::string &filepath);
+    ~ItemLoader() override;
 
-	std::shared_ptr<Item> CreateObjectFromFile(const std::string& objName) override;
+    std::shared_ptr<Item>
+    CreateObjectFromFile(const std::string &objName) override;
 
 private:
-	std::string m_sFilepath;
+    std::string m_sFilepath;
 };

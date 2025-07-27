@@ -1,26 +1,25 @@
 #pragma once
-#include <tinyxml2.h>
 #include <memory>
 #include <string>
+#include <tinyxml2.h>
 
 template <typename T>
 class Parser
 {
 public:
-	virtual ~Parser() {};
+    virtual ~Parser() {};
 
-	tinyxml2::XMLError LoadFile(const std::string& filepath)
-	{
-		return m_pXMLDoc->LoadFile(filepath.c_str());
-	}
+    tinyxml2::XMLError LoadFile(const std::string &filepath)
+    {
+        return m_pXMLDoc->LoadFile(filepath.c_str());
+    }
 
-	virtual std::shared_ptr<T> CreateObjectFromFile(const std::string& objName) = 0;
-	// TODO: Save the data
+    virtual std::shared_ptr<T> CreateObjectFromFile(const std::string &objName) = 0;
+    // TODO: Save the data
 
 
 protected:
-	std::unique_ptr<tinyxml2::XMLDocument> m_pXMLDoc;
+    std::unique_ptr<tinyxml2::XMLDocument> m_pXMLDoc;
 
 private:
-
 };

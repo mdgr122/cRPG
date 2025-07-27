@@ -8,14 +8,14 @@ typedef std::unique_ptr<InterfaceState> StatePtr;
 class StateMachine
 {
 public:
-	StateMachine();
-	~StateMachine();
+    StateMachine();
+    ~StateMachine();
 
-	void PushState(StatePtr newState);
-	StatePtr PopState();
-	const bool Empty() const { return m_States.empty(); }
-	StatePtr& GetCurrentState();
+    void PushState(StatePtr newState);
+    StatePtr PopState();
+    const bool Empty() const { return m_States.empty(); }
+    StatePtr &GetCurrentState();
 
 private:
-	std::stack<StatePtr> m_States;
+    std::stack<StatePtr> m_States;
 };
